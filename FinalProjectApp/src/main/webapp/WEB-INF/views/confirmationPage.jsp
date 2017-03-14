@@ -13,7 +13,6 @@
 <html>
 <head>
     <title>Group App</title>
-    ${message1}
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -22,6 +21,58 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <style>
+        .teacherswitch{
+            position: relative; width: 90px;
+            -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+        }
+        .teacherswitch-checkbox {
+            display: none;
+        }
+        .teacherswitch-label {
+            display: block; overflow: hidden; cursor: pointer;
+            border: 2px solid #999999; border-radius: 20px;
+        }
+        .teacherswitch-inner {
+            display: block; width: 200%; margin-left: -100%;
+            transition: margin 0.3s ease-in 0s;
+        }
+        .teacherswitch-inner:before, .teacherswitch-inner:after {
+            display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
+            font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+            box-sizing: border-box;
+        }
+        .teacherswitch-inner:before {
+            content: "Teacher";
+            padding-left: 10px;
+            background-color: #34A7C1; color: #FFFFFF;
+        }
+        .teacherswitch-inner:after {
+            content: "Student";
+            padding-right: 10px;
+            background-color: #EEEEEE; color: #999999;
+            text-align: right;
+        }
+        .teacherswitch-switch {
+            display: block; width: 18px; margin: 6px;
+            background: #FFFFFF;
+            position: absolute; top: 0; bottom: 0;
+            right: 56px;
+            border: 2px solid #999999; border-radius: 20px;
+            transition: all 0.3s ease-in 0s;
+        }
+        .teacherswitch-checkbox:checked + .teacherswitch-label .teacherswitch-inner {
+            margin-left: 0;
+        }
+        .teacherswitch-checkbox:checked + .teacherswitch-label .teacherswitch-switch {
+            right: 0px;
+        }
+    </style>
+
 </head>
 
 <div class="container">
@@ -36,7 +87,9 @@
         <div class = "container">
             <div class="wrapper" style="margin-top: 80px;
                                      margin-bottom: 20px;">
-                <form action="welcome" method="post" name="welcome" class="form-signin" style="max-width: 420px;
+
+                <!--need a form action to post login validation-->
+                <form action="" method="post" name="welcome" class="form-signin" style="max-width: 420px;
                               padding: 30px 38px 66px;
                               margin: 0 auto;
                               background-color: #eee;
@@ -45,13 +98,12 @@
                                 ">
                     <h3 class="form-signin-heading" style="text-align:center;
                                                           margin-bottom: 30px;">
-                        ${message}</h3>
+                        ${confirmMessage}</h3>
 
 
                     <hr style="border:solid;">
 
                     <br>
-
 
                     <input type="text" class="form-control" name="UserName" placeholder="Username" required="" autofocus="" style="position: relative;
                                   font-size: 16px;
@@ -70,29 +122,28 @@
                             border-top-right-radius: 0; "
                     />
 
-                    <select class="form-control" select="teacherstudent">
-                        <option value="teacher">Teacher</option>
-                        <option value="student">Student</option>
-                    </select>
-                    <br>
-                    <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit" style="margin-bottom:2px">Login</button>
+                    <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit" style="margin-bottom:2px">Submit</button>
 
                     <br>
+                    <div class="teacherswitch ">
+                        <input type="checkbox" name="teacherswitch" class="teacherswitch-checkbox" id="myteacherswitch" checked>
+                        <label class="teacherswitch-label" for="myteacherswitch">
+                            <span class="teacherswitch-inner"></span>
+                            <span class="teacherswitch-switch"></span>
+                        </label>
+                    </div>
+                    <br>
+
                     <div class="text-center">
+                        <!-- not sure if we'll want a register button or if we'll want a teacher to register for the kid -->
 
-                    <!-- not sure if we'll want a register button or if we'll want a teacher to register for the kid -->
-                    <a href="teacherRegister"><h3><b>Teacher Register</b></h3></a>
-                        <a href="studentRegister"><h3><b>Student Register</b></h3></a>
-        </div>
 
+                    </div>
+                </form>
             </div>
         </div>
-
-
-        </form>
     </div>
 </div>
-</div>
-</div>
+
 </body>
 </html>

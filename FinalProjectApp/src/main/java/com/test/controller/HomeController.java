@@ -1,6 +1,7 @@
 package com.test.controller;
 
 import com.sun.javafx.sg.prism.NGShape;
+import com.test.models.TeacherEntity;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
@@ -48,5 +49,84 @@ public class HomeController {
 
         return new
                 ModelAndView("welcome2", "cList", studentList);
+    }
+
+
+@RequestMapping("teacherRegister")
+public ModelAndView teacherRegister() {
+
+    String confirm = "";
+    return new
+            ModelAndView("teacherRegister", "confirmMessage", confirm);
+}
+
+    @RequestMapping("studentRegister")
+    public ModelAndView studentRegister() {
+
+        String confirm = "";
+        return new
+                ModelAndView("studentRegister", "confirmMessage", confirm);
+    }
+
+
+
+    @RequestMapping("addTeacher")
+    public ModelAndView addTeacher(@RequestParam("FirstName") String firstName,
+                                   @RequestParam("LastName") String lastName,
+                                   @RequestParam("userName") String userName,
+                                   @RequestParam("email") String email,
+                                   @RequestParam("password") String password){
+
+        Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
+        SessionFactory sessionFact = cfg.buildSessionFactory();
+        Session session = (Session) sessionFact.openSession();
+        Transaction tx = session.beginTransaction();
+        TeacherEntity newTeacher = new TeacherEntity();
+        newTeacher.setFirstName(firstName);
+        newTeacher.setLastName(lastName);
+        newTeacher.setUserName(userName);
+        newTeacher.setEmail(email);
+        newTeacher.setPassword(password);
+
+        session.save(newTeacher);
+        tx.commit();
+        session.close();
+
+        String confirm = "Hello " + firstName + "!";
+
+        return new
+                ModelAndView("welcome","confirmMessage",confirm);
+    }
+
+
+
+
+
+    @RequestMapping("addStudent")
+    public ModelAndView addStudent(@RequestParam("FirstName") String firstName,
+                                   @RequestParam("LastName") String lastName,
+                                   @RequestParam("userName") String userName,
+                                   @RequestParam("email") String email,
+                                   @RequestParam("password") String password){
+
+        Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
+        SessionFactory sessionFact = cfg.buildSessionFactory();
+        Session session = (Session) sessionFact.openSession();
+        Transaction tx = session.beginTransaction();
+        StudentEntity newStudent = new StudentEntity();
+        newStudent.setFirstName(firstName);
+        newStudent.setLastName(lastName);
+        newStudent.setUserName(userName);
+        newStudent.setEmail(email);
+        newStudent.setPassword(password);
+
+        session.save(newStudent);
+        tx.commit();
+        session.close();
+
+        String confirm = "Hello " + firstName + "!";
+
+        return new
+                ModelAndView("welcome","message1",confirm);
     }
 }
