@@ -1,11 +1,13 @@
 package com.test.controller;
 
+import com.sun.javafx.sg.prism.NGShape;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
 import com.test.models.StudentEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class HomeController {
 
     public ModelAndView helloWorld() {
         return new
-                ModelAndView("welcome", "message", "Hello World");
+                ModelAndView("welcome", "message", "Welcome! Log In Here.");
 
     }
 
