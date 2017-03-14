@@ -20,8 +20,5 @@
         <property name="email">
             <column name="email" sql-type="varchar(50)" length="50"/>
         </property>
-        <property name="clazz">
-            <column name="class" sql-type="varchar(40)" length="40" not-null="true"/>
-        </property>
     </class>
 </hibernate-mapping>

@@ -13,7 +13,6 @@ public class TeacherEntity {
     private String userName;
     private String password;
     private String email;
-    private String clazz;
 
     @Basic
     @Column(name = "firstName", nullable = false, length = 50)
@@ -65,16 +64,6 @@ public class TeacherEntity {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "class", nullable = true, length = 40)
-    public String getClazz() {
-        return clazz;
-    }
-
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,7 +76,6 @@ public class TeacherEntity {
         if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (clazz != null ? !clazz.equals(that.clazz) : that.clazz != null) return false;
 
         return true;
     }
@@ -99,7 +87,6 @@ public class TeacherEntity {
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (clazz != null ? clazz.hashCode() : 0);
         return result;
     }
 }
