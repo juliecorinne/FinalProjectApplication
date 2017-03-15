@@ -36,7 +36,7 @@
         <div class = "container">
             <div class="wrapper" style="margin-top: 80px;
                                      margin-bottom: 20px;">
-                <form action="welcome" method="post" name="welcome" class="form-signin" style="max-width: 420px;
+                <form action="valid" method="post" name="welcome" class="form-signin" style="max-width: 420px;
                               padding: 30px 38px 66px;
                               margin: 0 auto;
                               background-color: #eee;
@@ -75,7 +75,7 @@
                         <option value="student">Student</option>
                     </select>
                     <br>
-                    <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit" style="margin-bottom:2px">Login</button>
+                    <button action="valid" class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit" style="margin-bottom:2px">Login</button>
 
                     <br>
                     <div class="text-center">

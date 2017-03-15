@@ -20,7 +20,7 @@ title goes here
 <table border="1">
 <c:forEach var="myvar" items="${cList}">
     <tr>
-        <td>${myvar.firstName}</td>
+        <td>${myvar.firstName}  ${myvar.lastName}</td>
     </tr>
 </c:forEach>
 </table>

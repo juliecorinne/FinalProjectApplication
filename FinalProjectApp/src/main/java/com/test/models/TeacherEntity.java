@@ -2,8 +2,8 @@ package com.test.models;
 
 import javax.persistence.*;
 
-/**
- * Created by julieschneider on 3/14/17.
+/*
+ * Created by Jeff Choi on 3/15/17.
  */
 @Entity
 @Table(name = "Teacher", schema = "finalprojectapp", catalog = "")

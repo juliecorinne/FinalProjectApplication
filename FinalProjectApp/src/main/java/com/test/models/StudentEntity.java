@@ -2,8 +2,8 @@ package com.test.models;
 
 import javax.persistence.*;
 
-/**
- * Created by julieschneider on 3/14/17.
+/*
+ * Created by Jeff Choi on 3/15/17.
  */
 @Entity
 @Table(name = "Student", schema = "finalprojectapp", catalog = "")
@@ -14,22 +14,6 @@ public class StudentEntity {
     private String password;
     private String email;
     private String testResults;
-    public StudentEntity()
-    {
-        this ("","","","","","");
-
-
-    }
-
-
-    public StudentEntity(String firstName, String lastName, String userName, String password, String email, String testResults) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.email = email;
-        this.testResults = testResults;
-    }
 
     @Basic
     @Column(name = "firstName", nullable = false, length = 50)

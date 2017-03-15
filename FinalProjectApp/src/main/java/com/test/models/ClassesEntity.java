@@ -2,17 +2,18 @@ package com.test.models;
 
 import javax.persistence.*;
 
-/**
- * Created by julieschneider on 3/14/17.
+/*
+ * Created by Jeff Choi on 3/15/17.
  */
 @Entity
 @Table(name = "Classes", schema = "finalprojectapp", catalog = "")
 public class ClassesEntity {
     private String name;
     private String classId;
+    private String schoolName;
 
     @Basic
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = true, length = 100)
     public String getName() {
         return name;
     }
@@ -31,6 +32,16 @@ public class ClassesEntity {
         this.classId = classId;
     }
 
+    @Basic
+    @Column(name = "schoolName", nullable = true, length = 60)
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -40,6 +51,7 @@ public class ClassesEntity {
 
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (classId != null ? !classId.equals(that.classId) : that.classId != null) return false;
+        if (schoolName != null ? !schoolName.equals(that.schoolName) : that.schoolName != null) return false;
 
         return true;
     }
@@ -48,6 +60,7 @@ public class ClassesEntity {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (classId != null ? classId.hashCode() : 0);
+        result = 31 * result + (schoolName != null ? schoolName.hashCode() : 0);
         return result;
     }
 }

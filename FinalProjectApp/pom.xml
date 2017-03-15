@@ -56,6 +56,12 @@
             <version>3.6.3.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.ibm.watson.developer_cloud</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

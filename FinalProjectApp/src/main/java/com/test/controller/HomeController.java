@@ -1,6 +1,9 @@
 package com.test.controller;
 
+import com.ibm.watson.developer_cloud.personality_insights.v2.PersonalityInsights;
+import com.ibm.watson.developer_cloud.personality_insights.v2.model.Profile;
 import com.sun.javafx.sg.prism.NGShape;
+import com.test.models.ClassesEntity;
 import com.test.models.TeacherEntity;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
@@ -19,6 +22,11 @@ public class HomeController {
     @RequestMapping("/")
 
     public ModelAndView helloWorld() {
+        /*
+        PersonalityInsights service = new PersonalityInsights();
+        service.setUsernameAndPassword("fd5414fb-1232-411b-9edf-40bfc878274c", "aeOAQtv30TuH");
+        */
+
         return new
                 ModelAndView("welcome", "message", "Welcome! Log In Here.");
 
@@ -79,7 +87,7 @@ public ModelAndView teacherRegister() {
 
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
-        Session session = (Session) sessionFact.openSession();
+        Session session = sessionFact.openSession();
         Transaction tx = session.beginTransaction();
         TeacherEntity newTeacher = new TeacherEntity();
         newTeacher.setFirstName(firstName);
@@ -111,7 +119,7 @@ public ModelAndView teacherRegister() {
 
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
-        Session session = (Session) sessionFact.openSession();
+        Session session =  sessionFact.openSession();
         Transaction tx = session.beginTransaction();
         StudentEntity newStudent = new StudentEntity();
         newStudent.setFirstName(firstName);
@@ -129,4 +137,84 @@ public ModelAndView teacherRegister() {
         return new
                 ModelAndView("welcome","message1",confirm);
     }
+
+    @RequestMapping("valid")
+    public ModelAndView testing(@RequestParam("UserName") String userName, @RequestParam("Password") String password) {
+        Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
+
+        SessionFactory sessionFact = cfg.buildSessionFactory();
+
+        Session selectStudents = sessionFact.openSession();
+        Session selectTeachers = sessionFact.openSession();
+
+        Transaction tx = selectStudents.beginTransaction();
+        Transaction tx2 = selectTeachers.beginTransaction();
+
+        StudentEntity loginStudent = (StudentEntity)selectStudents.get(StudentEntity.class, userName);
+        TeacherEntity loginTeacher = (TeacherEntity)selectTeachers.get(TeacherEntity.class, userName);
+
+        if (loginStudent== null && loginTeacher != null) {
+            Criteria c = selectStudents.createCriteria(StudentEntity.class);
+
+            ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) c.list();
+            ModelAndView model =  new ModelAndView("teacherPage", "message", loginTeacher.getFirstName() + " TEACHER");
+            model.addObject("theList", studentList);
+
+
+            return model;
+        }
+        else if (loginStudent != null && loginTeacher == null) {
+            if (loginStudent.getTestResults() == null) {
+                return new ModelAndView("loggedIn", "message", loginStudent.getFirstName() + " STUDENT EMPTY TEST");
+            }
+            else {
+                return new ModelAndView("loggedIn", "message", loginStudent.getFirstName() + " STUDENT");
+            }
+        }
+        else {
+            return new ModelAndView("welcome", "message1", "Invalid Info!");
+        }
+
+
+
+
+    }
+
+    @RequestMapping("createClass")
+    public ModelAndView classCreate() {
+        return new ModelAndView("createClass", "message", "testing");
+    }
+
+    @RequestMapping("classCreated")
+    public ModelAndView classCreated(@RequestParam("Classname") String className, @RequestParam("schoolName") String schoolName, @RequestParam("classID") String classID) {
+        Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
+        SessionFactory sessionFact = cfg.buildSessionFactory();
+        Session session = sessionFact.openSession();
+        Transaction tx = session.beginTransaction();
+        ClassesEntity checkClass = (ClassesEntity)session.get(ClassesEntity.class, classID);
+
+        if (checkClass == null) {
+            ClassesEntity insertClass = new ClassesEntity();
+            insertClass.setClassId(classID);
+            insertClass.setSchoolName(schoolName);
+            insertClass.setName(className);
+            checkClass = insertClass;
+            session.save(checkClass);
+            tx.commit();
+            session.close();
+            return new ModelAndView("classCreated", "message", "SUCCESS");
+        }
+        else {
+            return new ModelAndView("classCreated", "message", "CLASS EXISTS");
+
+        }
+
+
+
+
+    }
+
+
+
+
 }
