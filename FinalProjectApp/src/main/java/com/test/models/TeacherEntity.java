@@ -1,6 +1,11 @@
 package com.test.models;
 
+import com.sun.tools.internal.jxc.gen.config.Classes;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
  * Created by Jeff Choi on 3/15/17.
@@ -13,6 +18,7 @@ public class TeacherEntity {
     private String userName;
     private String password;
     private String email;
+    private Set<ClassesEntity> classes;
 
     @Basic
     @Column(name = "firstName", nullable = false, length = 50)
@@ -64,6 +70,15 @@ public class TeacherEntity {
         this.email = email;
     }
 
+    @OneToMany(mappedBy = "Teacher", cascade = CascadeType.ALL)
+    public Set<ClassesEntity> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(Set<ClassesEntity> classes) {
+        this.classes = classes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -89,4 +104,6 @@ public class TeacherEntity {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
     }
+
+
 }

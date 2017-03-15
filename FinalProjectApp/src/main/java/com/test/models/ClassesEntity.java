@@ -11,6 +11,8 @@ public class ClassesEntity {
     private String name;
     private String classId;
     private String schoolName;
+    private String teacherUser;
+    private TeacherEntity theTeacher;
 
     @Basic
     @Column(name = "name", nullable = true, length = 100)
@@ -41,6 +43,27 @@ public class ClassesEntity {
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
     }
+
+    @Basic
+    @Column(name = "teacherUser", nullable = true, length = 40)
+    public String getTeacherUser() {
+        return teacherUser;
+    }
+
+    public void setTeacherUser(String teacherUser) {
+        this.teacherUser = teacherUser;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "teacherUser")
+    public TeacherEntity getTeacher() {
+        return theTeacher;
+    }
+
+    public void setTeacher(TeacherEntity teacher) {
+        this.theTeacher = teacher;
+    }
+
 
     @Override
     public boolean equals(Object o) {
