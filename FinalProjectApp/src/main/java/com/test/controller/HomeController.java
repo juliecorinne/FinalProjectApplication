@@ -36,7 +36,10 @@ public class HomeController {
     public ModelAndView helloWorld() {
         PersonalityInsights service = new PersonalityInsights();
         service.setUsernameAndPassword("fd5414fb-1232-411b-9edf-40bfc878274c", "aeOAQtv30TuH");
-        String text = "Call me Ishmael. Some years ago-never mind how long precisely-having "
+        String text =  "My name is Jeff and I like to code and I like music and etc etc";
+               /*
+
+                "Call me Ishmael. Some years ago-never mind how long precisely-having "
                 + "little or no money in my purse, and nothing particular to interest me on shore, "
                 + "I thought I would sail about a little and see the watery part of the world. "
                 + "It is a way I have of driving off the spleen and regulating the circulation. "
@@ -52,7 +55,7 @@ public class HomeController {
                 + "very nearly the same feelings towards the ocean with me. There now is your insular "
                 + "city of the Manhattoes, belted round by wharves as Indian isles by coral reefs-commerce surrounds "
                 + "it with her surf. Right and left, the streets take you waterward.";
-
+*/
         String text2 = "Well, thank you very much, Jim, for this opportunity. I want to thank Governor Romney and the University\n" +
                 "of Denver for your hospitality.\n" +
                 "\n" +
@@ -714,6 +717,7 @@ public class HomeController {
         JSONObject json2 = new JSONObject(profile2);
         JSONArray ar2 = json2.getJSONObject("tree").getJSONArray("children");
 
+        System.out.println("profile");
 
         for (int i = 0; i < 2; i++) {
             System.out.println(ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(i).get("percentage"));
