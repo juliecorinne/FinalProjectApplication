@@ -15,7 +15,7 @@
             <column name="schoolName" sql-type="varchar(60)" length="60" not-null="true"/>
         </property>
         <property name="teacherUser">
-            <column name="teacherUser" sql-type="varChar(40)"/>
+            <column name="teacherUser" sql-type="varchar(40)" length="40" not-null="true"/>
         </property>
     </class>
 </hibernate-mapping>

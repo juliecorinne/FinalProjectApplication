@@ -3,7 +3,7 @@ package com.test.models;
 import javax.persistence.*;
 
 /*
- * Created by Jeff Choi on 3/15/17.
+ * Created by Jeff Choi on 3/16/17.
  */
 @Entity
 @Table(name = "Classes", schema = "finalprojectapp", catalog = "")
@@ -12,7 +12,6 @@ public class ClassesEntity {
     private String classId;
     private String schoolName;
     private String teacherUser;
-    private TeacherEntity theTeacher;
 
     @Basic
     @Column(name = "name", nullable = true, length = 100)
@@ -22,6 +21,16 @@ public class ClassesEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Basic
+    @Column(name = "teacherUser", nullable = true, length = 100)
+    public String getTeacherUser() {
+        return teacherUser;
+    }
+
+    public void setTeacherUser(String teacher) {
+        this.teacherUser = teacher;
     }
 
     @Id
@@ -43,27 +52,6 @@ public class ClassesEntity {
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
     }
-
-    @Basic
-    @Column(name = "teacherUser", nullable = true, length = 40)
-    public String getTeacherUser() {
-        return teacherUser;
-    }
-
-    public void setTeacherUser(String teacherUser) {
-        this.teacherUser = teacherUser;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "teacherUser")
-    public TeacherEntity getTeacher() {
-        return theTeacher;
-    }
-
-    public void setTeacher(TeacherEntity teacher) {
-        this.theTeacher = teacher;
-    }
-
 
     @Override
     public boolean equals(Object o) {

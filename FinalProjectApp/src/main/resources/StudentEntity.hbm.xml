@@ -23,5 +23,8 @@
         <property name="testResults">
             <column name="testResults" sql-type="varchar(100)" length="100" not-null="true"/>
         </property>
+        <property name="className">
+            <column name="className" sql-type="varchar(100)" length="100" not-null="true"/>
+        </property>
     </class>
 </hibernate-mapping>

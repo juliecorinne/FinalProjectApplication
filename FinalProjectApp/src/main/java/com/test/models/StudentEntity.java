@@ -3,7 +3,7 @@ package com.test.models;
 import javax.persistence.*;
 
 /*
- * Created by Jeff Choi on 3/15/17.
+ * Created by Jeff Choi on 3/16/17.
  */
 @Entity
 @Table(name = "Student", schema = "finalprojectapp", catalog = "")
@@ -14,6 +14,7 @@ public class StudentEntity {
     private String password;
     private String email;
     private String testResults;
+    private String className;
 
     @Basic
     @Column(name = "firstName", nullable = false, length = 50)
@@ -23,6 +24,16 @@ public class StudentEntity {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    @Basic
+    @Column(name = "className", nullable = false, length = 50)
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className= className;
     }
 
     @Basic
