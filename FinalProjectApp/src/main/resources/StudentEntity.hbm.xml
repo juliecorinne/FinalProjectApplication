@@ -20,11 +20,26 @@
         <property name="email">
             <column name="email" sql-type="varchar(50)" length="50"/>
         </property>
-        <property name="testResults">
-            <column name="testResults" sql-type="varchar(100)" length="100" not-null="true"/>
-        </property>
         <property name="className">
-            <column name="className" sql-type="varchar(100)" length="100" not-null="true"/>
+            <column name="className" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="testResults">
+            <column name="testResults" sql-type="varchar(45)" length="45" />
+        </property>
+        <property name="oppenness">
+            <column name="oppenness" sql-type="double" precision="-1" />
+        </property>
+        <property name="emotionalRange">
+            <column name="emotionalRange" sql-type="double" precision="-1" />
+        </property>
+        <property name="agreeableness">
+            <column name="agreeableness" sql-type="double" precision="-1" />
+        </property>
+        <property name="introExtro">
+            <column name="introExtro" sql-type="double" precision="-1" />
+        </property>
+        <property name="conscientiousness">
+            <column name="conscientiousness" sql-type="double" precision="-1" />
         </property>
     </class>
 </hibernate-mapping>

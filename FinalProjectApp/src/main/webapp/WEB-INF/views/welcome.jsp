@@ -70,10 +70,6 @@
                             border-top-right-radius: 0; "
                     />
 
-                    <select class="form-control" select="teacherstudent">
-                        <option value="teacher">Teacher</option>
-                        <option value="student">Student</option>
-                    </select>
                     <br>
                     <button action="valid" class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit" style="margin-bottom:2px">Login</button>
 

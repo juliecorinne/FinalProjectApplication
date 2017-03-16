@@ -15,7 +15,24 @@ public class StudentEntity {
     private String email;
     private String testResults;
     private String className;
+    private Double oppenness;
+    private Double emotionalRange;
+    private Double agreeableness;
+    private Double introExtro;
+    private Double conscientiousness;
 
+    public StudentEntity() {
+    }
+
+    public StudentEntity(String firstName, String lastName, String userName, String password, String email, String testResults, String className) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.testResults = testResults;
+        this.className = className;
+    }
     @Basic
     @Column(name = "firstName", nullable = false, length = 50)
     public String getFirstName() {
@@ -27,16 +44,6 @@ public class StudentEntity {
     }
 
     @Basic
-    @Column(name = "className", nullable = false, length = 50)
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className= className;
-    }
-
-    @Basic
     @Column(name = "lastName", nullable = false, length = 60)
     public String getLastName() {
         return lastName;
@@ -44,6 +51,16 @@ public class StudentEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Basic
+    @Column(name = "className", nullable = false, length = 100)
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     @Id
@@ -77,13 +94,63 @@ public class StudentEntity {
     }
 
     @Basic
-    @Column(name = "testResults", nullable = true, length = 100)
+    @Column(name = "testResults", nullable = true, length = 45)
     public String getTestResults() {
         return testResults;
     }
 
     public void setTestResults(String testResults) {
         this.testResults = testResults;
+    }
+
+    @Basic
+    @Column(name = "oppenness", nullable = true, precision = 0)
+    public Double getOppenness() {
+        return oppenness;
+    }
+
+    public void setOppenness(Double oppenness) {
+        this.oppenness = oppenness;
+    }
+
+    @Basic
+    @Column(name = "emotionalRange", nullable = true, precision = 0)
+    public Double getEmotionalRange() {
+        return emotionalRange;
+    }
+
+    public void setEmotionalRange(Double emotionalRange) {
+        this.emotionalRange = emotionalRange;
+    }
+
+    @Basic
+    @Column(name = "agreeableness", nullable = true, precision = 0)
+    public Double getAgreeableness() {
+        return agreeableness;
+    }
+
+    public void setAgreeableness(Double agreeableness) {
+        this.agreeableness = agreeableness;
+    }
+
+    @Basic
+    @Column(name = "introExtro", nullable = true, precision = 0)
+    public Double getIntroExtro() {
+        return introExtro;
+    }
+
+    public void setIntroExtro(Double introExtro) {
+        this.introExtro = introExtro;
+    }
+
+    @Basic
+    @Column(name = "conscientiousness", nullable = true, precision = 0)
+    public Double getConscientiousness() {
+        return conscientiousness;
+    }
+
+    public void setConscientiousness(Double conscientiousness) {
+        this.conscientiousness = conscientiousness;
     }
 
     @Override
@@ -99,6 +166,14 @@ public class StudentEntity {
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (testResults != null ? !testResults.equals(that.testResults) : that.testResults != null) return false;
+        if (oppenness != null ? !oppenness.equals(that.oppenness) : that.oppenness != null) return false;
+        if (emotionalRange != null ? !emotionalRange.equals(that.emotionalRange) : that.emotionalRange != null)
+            return false;
+        if (agreeableness != null ? !agreeableness.equals(that.agreeableness) : that.agreeableness != null)
+            return false;
+        if (introExtro != null ? !introExtro.equals(that.introExtro) : that.introExtro != null) return false;
+        if (conscientiousness != null ? !conscientiousness.equals(that.conscientiousness) : that.conscientiousness != null)
+            return false;
 
         return true;
     }
@@ -111,6 +186,11 @@ public class StudentEntity {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (testResults != null ? testResults.hashCode() : 0);
+        result = 31 * result + (oppenness != null ? oppenness.hashCode() : 0);
+        result = 31 * result + (emotionalRange != null ? emotionalRange.hashCode() : 0);
+        result = 31 * result + (agreeableness != null ? agreeableness.hashCode() : 0);
+        result = 31 * result + (introExtro != null ? introExtro.hashCode() : 0);
+        result = 31 * result + (conscientiousness != null ? conscientiousness.hashCode() : 0);
         return result;
     }
 }
