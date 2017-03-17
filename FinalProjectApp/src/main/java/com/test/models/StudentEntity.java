@@ -3,7 +3,7 @@ package com.test.models;
 import javax.persistence.*;
 
 /*
- * Created by Jeff Choi on 3/16/17.
+ * Created by Jeff Choi on 3/17/17.
  */
 @Entity
 @Table(name = "Student", schema = "finalprojectapp", catalog = "")
@@ -21,18 +21,6 @@ public class StudentEntity {
     private Double introExtro;
     private Double conscientiousness;
 
-    public StudentEntity() {
-    }
-
-    public StudentEntity(String firstName, String lastName, String userName, String password, String email, String testResults, String className) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.email = email;
-        this.testResults = testResults;
-        this.className = className;
-    }
     @Basic
     @Column(name = "firstName", nullable = false, length = 50)
     public String getFirstName() {
@@ -43,6 +31,17 @@ public class StudentEntity {
         this.firstName = firstName;
     }
 
+
+    @Basic
+    @Column(name = "className", nullable = false, length = 5)
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName (String className) {
+        this.className = className;
+    }
+
     @Basic
     @Column(name = "lastName", nullable = false, length = 60)
     public String getLastName() {
@@ -51,16 +50,6 @@ public class StudentEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    @Basic
-    @Column(name = "className", nullable = false, length = 100)
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
     }
 
     @Id
@@ -94,7 +83,7 @@ public class StudentEntity {
     }
 
     @Basic
-    @Column(name = "testResults", nullable = true, length = 45)
+    @Column(name = "testResults", nullable = true, length = 5)
     public String getTestResults() {
         return testResults;
     }

@@ -20,34 +20,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-<form action="classSelected" method="get"  class="form-signin" style="max-width: 420px;
-                              padding: 30px 38px 66px;
-                              margin: 0 auto;
-                              background-color: #eee;
-                              border: 3px dotted rgba(0,0,0,0.1);
-                              background-color:rgba(0, 0, 0, 0.6);
-                                ">
-    <h3 class="form-signin-heading" style="text-align:center;
-                                                          margin-bottom: 30px;">
-        View Students In Class</h3>
-    <hr>
-    <select class="form-control" onchange="this.form.submit()" name="selectClass">
-        <option disabled selected value> -- select a class-- </option>
-        <c:forEach var="myvar" items="${theList}">
-                <option value = ${myvar.classId}>${myvar.name}  ${myvar.classId}</option>
-        </c:forEach>
-    </select>
-    <table border=1>
-    <c:forEach var="myvar" items="${studentList}">  <%----creating a loop that displays list--%>
-        <tr>
-            <td> ${myvar.firstName}   ${myvar.lastName}</td>
-
-            <td><a href="delete?id=${myvar.userName}"> Delete </a></td> <%----this is the delete button----%>
-        </tr>
-    </c:forEach>
-</table>
-
-</form>
 
 <form action="classCreated" method="post" name="register" class="form-signin" style="max-width: 420px;
                               padding: 30px 38px 66px;
@@ -87,6 +59,35 @@
     />
     <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Register</button>
     <div class="text-center"><a href="/"><h3><b>Go Back</b></h3></a></div>
+</form>
+
+<form action="classSelected" method="get"  class="form-signin" style="max-width: 420px;
+                              padding: 30px 38px 66px;
+                              margin: 0 auto;
+                              background-color: #eee;
+                              border: 3px dotted rgba(0,0,0,0.1);
+                              background-color:rgba(0, 0, 0, 0.6);
+                                ">
+    <h3 class="form-signin-heading" style="text-align:center;
+                                                          margin-bottom: 30px;">
+        View Students In Class</h3>
+    <hr>
+    <select class="form-control" onchange="this.form.submit()" name="selectClass">
+        <option disabled selected value> -- select a class-- </option>
+        <c:forEach var="myvar" items="${theList}">
+                <option value = ${myvar.classId}>${myvar.name}  ${myvar.classId}</option>
+        </c:forEach>
+    </select>
+    <table border=1>
+    <c:forEach var="myvar" items="${studentList}">  <%----creating a loop that displays list--%>
+        <tr>
+            <td> ${myvar.firstName}   ${myvar.lastName}</td>
+
+            <td><a href="delete?id=${myvar.userName}"> Delete </a></td> <%----this is the delete button----%>
+        </tr>
+    </c:forEach>
+</table>
+
 </form>
 
 </body>

@@ -150,13 +150,6 @@
                     <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Sumbit" type="Submit" style="margin-bottom:2px">Submit</button>
 
                     <br>
-                    <div class="teacherswitch ">
-                        <input type="checkbox" name="teacherswitch" class="teacherswitch-checkbox" id="myteacherswitch" checked>
-                        <label class="teacherswitch-label" for="myteacherswitch">
-                            <span class="teacherswitch-inner"></span>
-                            <span class="teacherswitch-switch"></span>
-                        </label>
-                    </div>
                     <br>
 
                 </form>

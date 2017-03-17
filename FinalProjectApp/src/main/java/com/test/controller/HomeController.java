@@ -3,6 +3,7 @@ package com.test.controller;
 import com.ibm.watson.developer_cloud.personality_insights.v2.PersonalityInsights;
 import com.ibm.watson.developer_cloud.personality_insights.v2.model.Profile;
 import com.sun.javafx.sg.prism.NGShape;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.test.models.ClassesEntity;
 import com.test.models.StudentClassesEntity;
 import com.test.models.TeacherEntity;
@@ -11,11 +12,13 @@ import org.hibernate.cfg.Configuration;
 
 import com.test.models.StudentEntity;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,11 +31,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static sun.security.krb5.Confounder.intValue;
+
 @Controller
 public class HomeController {
     //MVP
     String currentUser = "";
     String currentStudent = "";
+    String currentClass = "";
 
     @RequestMapping("/")
 
@@ -349,6 +355,7 @@ public class HomeController {
 
     @RequestMapping("classSelected")
     public ModelAndView editClasses(@RequestParam("selectClass") String classSelected) throws SQLException, ClassNotFoundException {
+        currentClass = classSelected;
 
         String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
         String userName = "root";
@@ -388,7 +395,7 @@ public class HomeController {
         studentList = (ArrayList<StudentEntity>) c.list();
 
 
-        return new ModelAndView("createClass", "theList", classNames).addObject("studentList", studentList);
+        return new ModelAndView("createGroup", "theList", classNames).addObject("studentList", studentList);
     }
 /*
     @RequestMapping("delete") //method for deleting parts of the list
@@ -417,6 +424,9 @@ public class HomeController {
         Session session = sessionFact.openSession();
         Transaction tx = session.beginTransaction();
         StudentEntity theStudent = (StudentEntity) session.get(StudentEntity.class, currentStudent);
+        Criteria c = session.createCriteria(ClassesEntity.class);
+        ArrayList<ClassesEntity> classList = (ArrayList<ClassesEntity>)c.list();
+
 
         String text = theAnswer;
         Profile profile = service.getProfile(text).execute();
@@ -449,7 +459,7 @@ public class HomeController {
             System.out.println(ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(4).get("name"));
             theStudent.setEmotionalRange(anotherTest);
 
-            //theStudent.setTestResults(1);
+            theStudent.setTestResults("true");
         //above grabs student in database
 
         //save things to database
@@ -458,7 +468,7 @@ public class HomeController {
         session.close();
 
 
-        return new ModelAndView("loggedIn", "message2", text);
+        return new ModelAndView("studentPage", "message2", text).addObject("theList", classList);
 
 
     }
@@ -499,7 +509,86 @@ public class HomeController {
     }
 
     @RequestMapping("createGroup")
-    public ModelAndView groupCreate() {
-        return new ModelAndView("createGroup", "message", "gorup group");
+    public ModelAndView groupCreate() throws ClassNotFoundException, SQLException {
+        String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
+        String userName = "root";
+        String password = "admin1212";
+        String query = "SELECT * FROM Classes WHERE teacherUser IN (SELECT userName  FROM Teacher INNER JOIN Classes ON Teacher.userName = Classes.teacherUser)";
+
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection(url, userName, password);
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        ArrayList<ClassesEntity> classNames = new ArrayList<ClassesEntity>();
+
+        System.out.println(classNames.size());
+
+        while (rs.next()) {
+            ClassesEntity temp = new ClassesEntity();
+            temp.setName(rs.getString("name"));
+            temp.setClassId(rs.getString("classID"));
+            classNames.add(temp);
+        }
+        rs.close();
+        st.close();
+        con.close();
+        return new ModelAndView("createGroup", "message", "gorup group").addObject("theList", classNames);
     }
+
+    @RequestMapping("groupCreated")
+    public ModelAndView createGroups(@RequestParam("groupNum") String groupNum, @RequestParam("selectCriteria") String criteria) {
+        Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
+        SessionFactory sessionFact = cfg.buildSessionFactory();
+        Session session = sessionFact.openSession();
+        Transaction tx = session.beginTransaction();
+
+        int numStudents = ((Long)session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+        int groupNumber = Integer.valueOf(groupNum);
+        int numGroups = numStudents / groupNumber;
+        int remainingStudents = numStudents % groupNumber;
+
+        String output = "You have " + numStudents + " Number of students. You can create " + numGroups + " groups. And you will have "  + remainingStudents   + " number of studnets not in groups and put into r";
+
+        Criteria c = session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).addOrder(Order.asc(criteria));
+
+        ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) c.list();
+
+        StudentEntity[][] groupList = new StudentEntity[numGroups][numStudents];
+        int studentCounter = 0;
+
+        if (remainingStudents == 0) {
+            for (int i = 0; i < numGroups; i++) {
+                for (int j = 0; j < groupNumber; j++) {
+                    System.out.println("IN BOX " + i + " " + j);
+                    System.out.println("LOOKING AT STUDENT " + studentList.get(studentCounter).getFirstName() + " " + studentList.get(studentCounter).getEmotionalRange());
+                    groupList[i][j] = studentList.get(studentCounter);
+                    studentCounter++;
+                }
+            }
+        }
+        else {
+            //gotta deal with uneven amount of student groups here
+
+
+        }
+
+
+        System.out.println("ORDERED GROUP SHOULD PRINT HERE");
+        for (int i = 0; i < groupNumber; i++) {
+                for (int j = 0; j < numGroups; j++) {
+                    System.out.println(groupList[j][i].getFirstName() + " " + groupList[j][i].getEmotionalRange());
+                }
+                System.out.println("---");
+            }
+/*
+        for (int i = 0; i < studentList.size(); i++) {
+            System.out.println(studentList.get(i).getFirstName() + " " + studentList.get(i).getEmotionalRange());
+
+        }
+*/
+        return new ModelAndView("viewGroups", "message", output + studentList.size());
+
+
+    }
+
 }
