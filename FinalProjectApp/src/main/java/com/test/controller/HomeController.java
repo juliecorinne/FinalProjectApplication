@@ -30,6 +30,7 @@ import java.util.List;
 
 @Controller
 public class HomeController {
+    //MVP
     String currentUser = "";
     String currentStudent = "";
 
