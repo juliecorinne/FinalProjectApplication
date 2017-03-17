@@ -41,9 +41,8 @@
     <table border=1>
         <c:forEach var="myvar" items="${studentList}">  <%----creating a loop that displays list--%>
             <tr>
-                <td> ${myvar.firstName}   ${myvar.lastName}</td>
+                <td> ${myvar.firstName}  ${myvar.lastName} </td>
 
-                <td><a href="delete?id=${myvar.userName}"> Delete </a></td> <%----this is the delete button----%>
             </tr>
         </c:forEach>
     </table>

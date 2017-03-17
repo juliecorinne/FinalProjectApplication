@@ -4,13 +4,10 @@ import com.ibm.watson.developer_cloud.personality_insights.v2.PersonalityInsight
 import com.ibm.watson.developer_cloud.personality_insights.v2.model.Profile;
 import com.sun.javafx.sg.prism.NGShape;
 import com.sun.org.apache.xpath.internal.operations.Mod;
-import com.test.models.ClassesEntity;
-import com.test.models.StudentClassesEntity;
-import com.test.models.TeacherEntity;
+import com.test.models.*;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
-import com.test.models.StudentEntity;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -250,22 +247,6 @@ public class HomeController {
 
     @RequestMapping("createClass")
     public ModelAndView classCreate() throws ClassNotFoundException, SQLException {
-        /*
-        Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
-        SessionFactory session= cfg.buildSessionFactory();
-        Session selectClasses = session.openSession();
-        Session selectTeachers = session.openSession();
-        selectClasses.beginTransaction();
-        selectTeachers.beginTransaction();
-        Criteria c = selectClasses.createCriteria(ClassesEntity.class);
-        Query q = selectClasses.createSQLQuery("SELECT name FROM Classes WHERE teacherUser = (SELECT userName  FROM Teacher INNER JOIN Classes ON Teacher.userName = Classes.teacherUser)");
-        List<ClassesEntity> usersList = q.list();
-
-
-        ArrayList<ClassesEntity> classList = (ArrayList<ClassesEntity>) c.list();
-        */
-
-
         String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
         String userName = "root";
         String password = "admin1212";
@@ -327,6 +308,7 @@ public class HomeController {
             String password = "admin1212";
             String query = "SELECT * FROM Classes WHERE teacherUser IN (SELECT userName  FROM Teacher INNER JOIN Classes ON Teacher.userName = Classes.teacherUser)";
 
+
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection(url, userName, password);
             Statement st = con.createStatement();
@@ -376,9 +358,6 @@ public class HomeController {
             temp.setClassId(rs.getString("classID"));
             classNames.add(temp);
         }
-        rs.close();
-        st.close();
-        con.close();
 
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
 
@@ -387,33 +366,25 @@ public class HomeController {
         Session selectStudents = sessionFact.openSession();
 
         selectStudents.beginTransaction();
-
+        query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '"+classSelected+"')";
         Criteria c = selectStudents.createCriteria(StudentEntity.class);
-        c.add(Restrictions.like("className", classSelected));
-
+        Criteria cc = selectStudents.createCriteria(StudentClassesEntity.class);
+        cc.add(Restrictions.like("classId", classSelected));
+        rs = st.executeQuery(query);
         ArrayList<StudentEntity> studentList = new ArrayList<StudentEntity>();
-        studentList = (ArrayList<StudentEntity>) c.list();
+        while (rs.next()) {
+            StudentEntity temp = new StudentEntity();
+            temp.setFirstName(rs.getString("firstName"));
+            temp.setLastName(rs.getString("lastName"));
+            studentList.add(temp);
+        }
 
-
+        //studentList = (ArrayList<StudentEntity>) cc.list();
+        rs.close();
+        st.close();
+        con.close();
         return new ModelAndView("createGroup", "theList", classNames).addObject("studentList", studentList);
     }
-/*
-    @RequestMapping("delete") //method for deleting parts of the list
-    public ModelAndView deleteCustomer(@RequestParam("id") String id) {
-        // temp will store info for the object that we want to delete
-        StudentEntity temp = new StudentEntity();
-        temp.setCustomerID(id);
-        Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
-        SessionFactory fact = cfg.buildSessionFactory();
-        Session student = fact.openSession();
-        student.beginTransaction();
-        student.delete(temp);// delete the object from the list
-        student.getTransaction().commit();//delete row from the datebase
-        ArrayList<CustomersEntity> customerList = getAllCustomers();
-        return new
-                ModelAndView("welcome2", "cList", customerList);
-    }
-    */
 
     @RequestMapping("testTaken") //method for deleting parts of the list
     public ModelAndView deleteCustomer(@RequestParam("studentAnswer") String theAnswer) {
@@ -460,7 +431,6 @@ public class HomeController {
             theStudent.setEmotionalRange(anotherTest);
 
             theStudent.setTestResults("true");
-        //above grabs student in database
 
         //save things to database
         session.save(theStudent);
@@ -536,57 +506,96 @@ public class HomeController {
     }
 
     @RequestMapping("groupCreated")
-    public ModelAndView createGroups(@RequestParam("groupNum") String groupNum, @RequestParam("selectCriteria") String criteria) {
+    public ModelAndView createGroups(@RequestParam("groupNum") String groupNum, @RequestParam("selectCriteria") String criteria) throws ClassNotFoundException, SQLException {
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
         Session session = sessionFact.openSession();
         Transaction tx = session.beginTransaction();
 
-        int numStudents = ((Long)session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+        String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
+        String userName = "root";
+        String password = "admin1212";
+        //String query = "SELECT * FROM Classes WHERE teacherUser IN (SELECT userName  FROM Teacher INNER JOIN Classes ON Teacher.userName = Classes.teacherUser)";
+
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection(url, userName, password);
+        Statement st = con.createStatement();
+        //ResultSet rs = st.executeQuery(query);
+        String query = "";
+        query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '"+currentClass+"')";
+        ResultSet rs = st.executeQuery(query);
+        int counter = 0;
+        while (rs.next()) {
+            counter += 1;
+        }
+
+        // gotat set query where you count number of studnets in student_classes rather than just the student entity
+        //int numStudents = ((Long)session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+        int numStudents = counter;
         int groupNumber = Integer.valueOf(groupNum);
         int numGroups = numStudents / groupNumber;
         int remainingStudents = numStudents % groupNumber;
+        System.out.println("You have " + numStudents + " Number of students. You can create " + numGroups + " groups. And you will have "  + remainingStudents   + " number of studnets not in groups and put into r");
 
         String output = "You have " + numStudents + " Number of students. You can create " + numGroups + " groups. And you will have "  + remainingStudents   + " number of studnets not in groups and put into r";
 
-        Criteria c = session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).addOrder(Order.asc(criteria));
+       // Criteria c = session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).addOrder(Order.asc(criteria));
 
-        ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) c.list();
+        query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '"+currentClass+"') ORDER BY '"+criteria+"' asc";
+
+        //query = "SELECT * FROM Student";
+
+        //Query q = session.createSQLQuery(query);
+
+        rs = st.executeQuery(query);
+
+        int counter2 = 0;
+        ArrayList<StudentEntity> studentList = new ArrayList<StudentEntity>();
+        while (rs.next()) {
+            //constructor for temp StudentEntity
+            //push studneteklfjaf into studnetlist
+            StudentEntity temp = new StudentEntity(rs.getString("firstName"), rs.getString("lastName"), rs.getString("userName"), rs.getString("password"),
+                    rs.getString("email"), rs.getString("testResults"), rs.getString("className"), rs.getDouble("oppenness"),
+                    rs.getDouble("emotionalRange"), rs.getDouble("agreeableness"), rs.getDouble("introExtro"), rs.getDouble("conscientiousness"));
+            studentList.add(temp);
+            counter2++;
+        }
+
+        //ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) q.list();
 
         StudentEntity[][] groupList = new StudentEntity[numGroups][numStudents];
         int studentCounter = 0;
 
-        if (remainingStudents == 0) {
             for (int i = 0; i < numGroups; i++) {
                 for (int j = 0; j < groupNumber; j++) {
-                    System.out.println("IN BOX " + i + " " + j);
-                    System.out.println("LOOKING AT STUDENT " + studentList.get(studentCounter).getFirstName() + " " + studentList.get(studentCounter).getEmotionalRange());
+                    System.out.println("IN BOX " + i + "_" + j + " " + studentList.size());
+                    //System.out.println("LOOKING AT STUDENT " + studentList.get(studentCounter).getFirstName() + " " + studentList.get(studentCounter).getEmotionalRange());
                     groupList[i][j] = studentList.get(studentCounter);
                     studentCounter++;
                 }
             }
-        }
-        else {
-            //gotta deal with uneven amount of student groups here
-
-
-        }
 
 
         System.out.println("ORDERED GROUP SHOULD PRINT HERE");
         for (int i = 0; i < groupNumber; i++) {
                 for (int j = 0; j < numGroups; j++) {
+                    System.out.println("GROUP: " + currentClass + i);
                     System.out.println(groupList[j][i].getFirstName() + " " + groupList[j][i].getEmotionalRange());
+                    String idStudent = groupList[j][i].getUserName();
+                    String idClass = currentClass;
+                    String groupName = ""+ currentClass + "_" + j;
+                    String query2 = "DELETE FROM `Student_Classes` WHERE `studentID` = '"+idStudent+"' AND `classID` = '"+idClass+"'";
+                    st.executeUpdate(query2);
+                    query2 = "INSERT INTO `Student_Classes` (studentID, classID, groupID) VALUES ('"+idStudent+"', '"+idClass+"', '"+groupName+"')";
+                    st.executeUpdate(query2);
                 }
                 System.out.println("---");
             }
-/*
-        for (int i = 0; i < studentList.size(); i++) {
-            System.out.println(studentList.get(i).getFirstName() + " " + studentList.get(i).getEmotionalRange());
 
-        }
-*/
-        return new ModelAndView("viewGroups", "message", output + studentList.size());
+
+        st.close();
+        con.close();
+        return new ModelAndView("viewGroups", "message", output + counter2);
 
 
     }

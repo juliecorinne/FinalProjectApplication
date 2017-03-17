@@ -13,5 +13,8 @@
                 <column name="classID" sql-type="varchar(40)" length="40"/>
             </key-property>
         </composite-id>
+        <property name="groupId">
+            <column name="groupID" sql-type="varchar(40)" length="40" not-null="true"/>
+        </property>
     </class>
 </hibernate-mapping>

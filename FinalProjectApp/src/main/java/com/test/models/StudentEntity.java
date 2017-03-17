@@ -11,6 +11,24 @@ public class StudentEntity {
     private String firstName;
     private String lastName;
     private String userName;
+
+    public StudentEntity() {}
+
+    public StudentEntity(String firstName, String lastName, String userName, String password, String email, String testResults, String className, Double oppenness, Double emotionalRange, Double agreeableness, Double introExtro, Double conscientiousness) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.testResults = testResults;
+        this.className = className;
+        this.oppenness = oppenness;
+        this.emotionalRange = emotionalRange;
+        this.agreeableness = agreeableness;
+        this.introExtro = introExtro;
+        this.conscientiousness = conscientiousness;
+    }
+
     private String password;
     private String email;
     private String testResults;
