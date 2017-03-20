@@ -14,7 +14,7 @@
             </key-property>
         </composite-id>
         <property name="groupId">
-            <column name="groupID" sql-type="varchar(40)" length="40" not-null="true"/>
+            <column name="groupID" sql-type="varchar(40)" length="40"/>
         </property>
     </class>
 </hibernate-mapping>
