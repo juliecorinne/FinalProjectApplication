@@ -60,7 +60,7 @@
                                 ">
                                 <h3 class="form-signin-heading" style="text-align:center;
                                                           margin-bottom: 30px;">
-                                   Hello! Welcome to your home page.
+                                   Hello! Welcome to your home page. To create a group, click on the "Create Class" tab and view the students in a class.
                                 </h3>
                             </form>
                         </div>
