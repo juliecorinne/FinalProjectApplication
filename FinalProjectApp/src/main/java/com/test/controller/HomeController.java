@@ -77,7 +77,7 @@ public class HomeController {
 
         String confirm = "Register New Teacher!";
         return new
-                ModelAndView("teacherRegister", "mesage1", confirm);
+                ModelAndView("teacherRegister", "message1", confirm);
     }
 
     @RequestMapping("studentRegister")
@@ -96,13 +96,16 @@ public class HomeController {
                                    @RequestParam("email") String email,
                                    @RequestParam("password") String password) {
 
+        //opens hibernation configuration
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
         Session session = sessionFact.openSession();
         Transaction tx = session.beginTransaction();
+        //adding restrictions uses current username for teacher
         Criteria c = session.createCriteria(TeacherEntity.class).add(Restrictions.eq("userName", userName));
         ArrayList<TeacherEntity> tList = (ArrayList<TeacherEntity>)c.list();
 
+        //validation to check if username already exists
         if (tList.size() == 0) {
             TeacherEntity newTeacher = new TeacherEntity();
             newTeacher.setFirstName(firstName);
@@ -134,6 +137,7 @@ public class HomeController {
                                    @RequestParam("email") String email,
                                    @RequestParam("password") String password) {
 
+        //opens hibernation configuration
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
         Session session = sessionFact.openSession();
@@ -141,6 +145,7 @@ public class HomeController {
         Criteria c = session.createCriteria(StudentEntity.class).add(Restrictions.eq("userName", userName));
         ArrayList<StudentEntity> cList = (ArrayList<StudentEntity>)c.list();
 
+        //checks to see if student username already exists
         if (cList.size() == 0) {
             StudentEntity newStudent = new StudentEntity();
             newStudent.setFirstName(firstName);
@@ -180,6 +185,7 @@ public class HomeController {
         if (loginStudent == null && loginTeacher != null) {
             // if teacher, login and view teacher's page
 
+            //checks to see if username and password match
             if (loginTeacher.getPassword().equals(password)) {
                 Criteria c = selectStudents.createCriteria(StudentEntity.class);
                 ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) c.list();
@@ -197,8 +203,10 @@ public class HomeController {
             // if student, log in
             if (loginStudent.getPassword().equals(password)) {
                 currentStudent = userName;
+                //if theres nothing in the test result column or if it says "false"
                 if (loginStudent.getTestResults() == null || loginStudent.getTestResults().equals("false")) {
                     //view test page if student hasn't taken test
+                    //logged in page is where students take the personality test
                     return new ModelAndView("loggedIn");
                 } else {
                     //go to list of classes page if the student has taken test
@@ -225,8 +233,10 @@ public class HomeController {
         String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
         String userName = "root";
         String password = "admin1212";
+        //inner join for classes and teacher
         String query = "SELECT * FROM Classes WHERE teacherUser IN (SELECT userName  FROM Teacher INNER JOIN Classes ON Teacher.userName = Classes.teacherUser)";
 
+        //uses jdbc, difficult to establish hibernate inner join
         Class.forName("com.mysql.jdbc.Driver");
         Connection con = DriverManager.getConnection(url, userName, password);
         Statement st = con.createStatement();
@@ -259,6 +269,7 @@ public class HomeController {
         */
     }
 
+    //takes in parameters for the class information
     @RequestMapping("classCreated")
     public ModelAndView classCreated(@RequestParam("Classname") String className, @RequestParam("schoolName") String schoolName, @RequestParam("classID") String classID) throws ClassNotFoundException, SQLException {
         //redirects to this from createClass if new class is created, takes in paramets of class name, etc
@@ -342,6 +353,7 @@ public class HomeController {
         Session selectStudents = sessionFact.openSession();
 
         selectStudents.beginTransaction();
+        //displays all of the students from the student_classes junction table where the studentID is associated w classID
         query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '"+classSelected+"')";
         Criteria c = selectStudents.createCriteria(StudentEntity.class);
         Criteria cc = selectStudents.createCriteria(StudentClassesEntity.class);
@@ -364,6 +376,8 @@ public class HomeController {
 
     @RequestMapping("testTaken")
     public ModelAndView deleteCustomer(@RequestParam("studentAnswer") String theAnswer) {
+        //validation to ensure user is being wordy enough
+        //API doesn't function without at least 100 words
         if (theAnswer.length() < 100) {
             return new ModelAndView("loggedIn", "message", "Please enter at least 20 words per answer!");
 
@@ -382,16 +396,22 @@ public class HomeController {
             Criteria cc = session.createCriteria(ClassesEntity.class);
             Criteria ccc = session.createCriteria(StudentClassesEntity.class).add(Restrictions.eq("studentId", currentStudent));
             ArrayList<StudentClassesEntity> theClasses = new ArrayList<StudentClassesEntity>();
+            //if the list is not empty, it will be able to be called once the student is logged in
             if (!ccc.list().isEmpty()) {
                 theClasses = (ArrayList<StudentClassesEntity>) ccc.list();
             }
 
+
+            //theAnswer is student answers
             String text = theAnswer;
+            //API requires making a profile
             Profile profile = service.getProfile(text).execute();
             JSONObject json = new JSONObject(profile);
+            //goes through the JSON tree
             JSONArray ar = json.getJSONObject("tree").getJSONArray("children");
 
             String testing;
+            //once in the JSON tree, goes through each index until we get to the necessary index for big 5 personality traits
             testing = ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(0).get("percentage").toString();
             double anotherTest = Double.valueOf(testing);
             //System.out.println(ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(0).get("name"));
@@ -417,6 +437,7 @@ public class HomeController {
             //System.out.println(ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(4).get("name"));
             theStudent.setEmotionalRange(anotherTest);
 
+            //sets test results in students table to "true", so when a student logs in again they don't need to take the test over
             theStudent.setTestResults("true");
             ArrayList<StudentClassesEntity> emptyList = new ArrayList<StudentClassesEntity>();
 
@@ -505,6 +526,7 @@ public class HomeController {
     //GO THROUGH EVVERYTHING BELOW HERE AND MAKE SURE EVERYBODY KNOWS
     @RequestMapping("groupCreated")
     public ModelAndView createGroups(@RequestParam("groupNum") String groupNum, @RequestParam("selectCriteria") String criteria) throws ClassNotFoundException, SQLException {
+        //validation to ensure teacher us entering a number and not leaving this part blank
         if (!groupNum.isEmpty()) {
             //group created using settings from previous teacher page where they choose number of people per group
             remainingList.clear();
