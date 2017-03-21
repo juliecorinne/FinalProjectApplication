@@ -60,7 +60,7 @@
                                 ">
                                 <h3 class="form-signin-heading" style="text-align:center;
                                                           margin-bottom: 30px;">
-                                   WELCOME TO TEACHER PAGE
+                                   Hello! Welcome to your home page.
                                 </h3>
                             </form>
                         </div>
@@ -72,8 +72,8 @@
 
 
         </div>
-        <div role="tabpanel" class="tab-pane" id="messages">...</div>
-        <div role="tabpanel" class="tab-pane" id="settings">...</div>
+        <%--<div role="tabpanel" class="tab-pane" id="messages">...</div>--%>
+        <%--<div role="tabpanel" class="tab-pane" id="settings">...</div>--%>
     </div>
 
 </div>

@@ -25,53 +25,6 @@
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-    <style>
-        .teacherswitch{
-            position: relative; width: 90px;
-            -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
-        }
-        .teacherswitch-checkbox {
-            display: none;
-        }
-        .teacherswitch-label {
-            display: block; overflow: hidden; cursor: pointer;
-            border: 2px solid #999999; border-radius: 20px;
-        }
-        .teacherswitch-inner {
-            display: block; width: 200%; margin-left: -100%;
-            transition: margin 0.3s ease-in 0s;
-        }
-        .teacherswitch-inner:before, .teacherswitch-inner:after {
-            display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-            font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-            box-sizing: border-box;
-        }
-        .teacherswitch-inner:before {
-            content: "Teacher";
-            padding-left: 10px;
-            background-color: #34A7C1; color: #FFFFFF;
-        }
-        .teacherswitch-inner:after {
-            content: "Student";
-            padding-right: 10px;
-            background-color: #EEEEEE; color: #999999;
-            text-align: right;
-        }
-        .teacherswitch-switch {
-            display: block; width: 18px; margin: 6px;
-            background: #FFFFFF;
-            position: absolute; top: 0; bottom: 0;
-            right: 56px;
-            border: 2px solid #999999; border-radius: 20px;
-            transition: all 0.3s ease-in 0s;
-        }
-        .teacherswitch-checkbox:checked + .teacherswitch-label .teacherswitch-inner {
-            margin-left: 0;
-        }
-        .teacherswitch-checkbox:checked + .teacherswitch-label .teacherswitch-switch {
-            right: 0px;
-        }
-    </style>
 
 </head>
 
