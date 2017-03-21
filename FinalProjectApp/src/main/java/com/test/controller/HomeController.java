@@ -381,7 +381,10 @@ public class HomeController {
             ArrayList<ClassesEntity> classList = (ArrayList<ClassesEntity>) c.list();
             Criteria cc = session.createCriteria(ClassesEntity.class);
             Criteria ccc = session.createCriteria(StudentClassesEntity.class).add(Restrictions.eq("studentId", currentStudent));
-            ArrayList<StudentClassesEntity> theClasses = (ArrayList<StudentClassesEntity>) ccc.list();
+            ArrayList<StudentClassesEntity> theClasses = new ArrayList<StudentClassesEntity>();
+            if (!ccc.list().isEmpty()) {
+                theClasses = (ArrayList<StudentClassesEntity>) ccc.list();
+            }
 
             String text = theAnswer;
             Profile profile = service.getProfile(text).execute();
@@ -415,6 +418,7 @@ public class HomeController {
             theStudent.setEmotionalRange(anotherTest);
 
             theStudent.setTestResults("true");
+            ArrayList<StudentClassesEntity> emptyList = new ArrayList<StudentClassesEntity>();
 
             //save things to database
             session.save(theStudent);
@@ -422,9 +426,11 @@ public class HomeController {
             session.close();
 
             if (theClasses.size() == 0) {
-                return new ModelAndView("studentPage", "message2", text).addObject("theList", classList);
+                return new ModelAndView("studentPage", "message2", text).addObject("theList", classList).addObject("courseList", emptyList);
+
             }
             else {
+
                 return new ModelAndView("studentPage", "message2", text).addObject("theList", classList).addObject("courseList", theClasses);
             }
         }
