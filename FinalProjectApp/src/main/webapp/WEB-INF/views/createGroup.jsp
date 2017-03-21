@@ -47,6 +47,7 @@
             <h3 class="form-signin-heading" style="text-align:center; color:#FFFFFF;
                                                           margin-bottom: 30px;">
                 View Students In Class</h3>
+            <h4 style="color:white"><center>${errorMessage}</center></h4>
             <hr>
             <select class="form-control" onchange="this.form.submit()" name="selectClass">
                 <option disabled selected value> -- select a class-- </option>

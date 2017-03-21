@@ -36,13 +36,13 @@
                               border: 3px dotted rgba(0,0,0,0.1);
                               background-color:rgba(0, 0, 0, 0.6);
                               overflow: auto;">
-            <div style="color:#FFFFFF">${message}</div>
 
 <br>
 
     <div style="color:#FFFFFF"><h3 class="form-signin-heading" style="text-align:center;
                                                           margin-bottom: 30px;">
     View Student Groups</h3></div>
+            <div class="text-center" style="color:white">  ${message}</div>
     <hr>
 
     <table border=1>

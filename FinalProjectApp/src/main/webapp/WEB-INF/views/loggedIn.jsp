@@ -29,7 +29,6 @@
 </head>
 
 <body>
-${message}
 
 <div class="container">
     <div class="jumbotron" style="background:url(http://edu.stemjobs.com/wp-content/uploads/2015/01/86487819.jpg);
@@ -42,7 +41,7 @@ ${message}
             <div class="wrapper" style="margin-top: -15px;
                                      margin-bottom: 20px;">
 
-<form action="testTaken" method="post" name="register" class="form-signin" style="max-width: 820px;
+<form action="testTaken" method="post" name="register" class="form-signin" style="max-width: 100%;
                                padding-top: 10px;
                                padding-bottom: 5px;
                                padding-left: 15px;
@@ -54,6 +53,7 @@ ${message}
                               background-color:rgba(0, 0, 0, 0.6);
                                 ">
 <p style="color: #FFFFFF">To help us better place you into a group, please fill out the questions below.</p>
+    <h4 style="color:white">${message}</h4>
 <hr>
     <div style="color:#FFFFFF">
     What are three words you would use to describe yourself and why?<br>
