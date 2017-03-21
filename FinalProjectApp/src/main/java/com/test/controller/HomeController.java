@@ -421,8 +421,12 @@ public class HomeController {
             tx.commit();
             session.close();
 
-
-            return new ModelAndView("studentPage", "message2", text).addObject("theList", classList).addObject("courseList", theClasses);
+            if (theClasses.size() == 0) {
+                return new ModelAndView("studentPage", "message2", text).addObject("theList", classList);
+            }
+            else {
+                return new ModelAndView("studentPage", "message2", text).addObject("theList", classList).addObject("courseList", theClasses);
+            }
         }
 
 
