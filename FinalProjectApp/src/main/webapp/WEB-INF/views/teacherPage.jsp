@@ -18,17 +18,23 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://embed.modernapp.co/chat?code=0af636fdc942f80def1de3c92d2637d8"></script>
 </head>
 <body>
 <div>
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-        <li role="presentation"><a href="createClass" aria-controls="profile" role="tab" data-toggle="tab">Create Class</a></li>
-        <li role="presentation"><a href="viewGroup" aria-controls="messages" role="tab" data-toggle="tab">View Groups</a></li>
-        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
-    </ul>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+            <li role="presentation"><a href="createClass" aria-controls="profile" role="tab" data-toggle="tab">Create Class</a></li>
+            <li role="presentation"><a href="viewGroup" aria-controls="messages" role="tab" data-toggle="tab">View Groups</a></li>
+        </ul>
+        <ul class="nav navbar-right navbar-nav">
+            <li role="presentation"><a href="/" aria-controls="messages" role="tab" data-toggle="tab">Log Out</a></li>
+        </ul>
+    </div>
 
     <!-- Tab panes -->
     <div class="tab-content">
@@ -55,15 +61,6 @@
                                 <h3 class="form-signin-heading" style="text-align:center;
                                                           margin-bottom: 30px;">
                                    WELCOME TO TEACHER PAGE
-
-
-                                    <table border="1">
-                                        <c:forEach var="myvar" items="${theList}">
-                                            <tr>
-                                                <td>${myvar.firstName}</td>
-                                            </tr>
-                                        </c:forEach>
-                                    </table>
                                 </h3>
                             </form>
                         </div>

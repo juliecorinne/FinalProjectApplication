@@ -7,7 +7,6 @@ import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.test.models.*;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
-
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -19,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -41,71 +39,9 @@ public class HomeController {
     String THECRITERIA;
 
     @RequestMapping("/")
-
     public ModelAndView helloWorld() {
-        PersonalityInsights service = new PersonalityInsights();
-        service.setUsernameAndPassword("fd5414fb-1232-411b-9edf-40bfc878274c", "aeOAQtv30TuH");
-        String text = "My name is Jeff and I like to code and I like music and etc etc"
-                + "I woke up at 6 am yesterday  and I came to grand circus bootcamp and started workign on "
-                + "out project. we continued working and it was a good time and we got a lot of work done"
-                + "we have to show our project tomorrow so it is a little nerve racking but we should"
-                + "be good. Hopefuly we can have a good project ready for them to show and we can do well."
-                + "I have a dog named Jessie and she is doing well. She is a mutt and weighs 60 pounds."
-                + "Blah blah "
-                + "I woke up at 6 am yesterday  and I came to grand circus bootcamp and started workign on "
-                + "out project. we continued working and it was a good time and we got a lot of work done"
-                + "we have to show our project tomorrow so it is a little nerve racking but we should"
-                + "be good. Hopefuly we can have a good project ready for them to show and we can do well."
-                + "I have a dog named Jessie and she is doing well. She is a mutt and weighs 60 pounds."
-                + "Blah blah ";
-
-
-        String text2 = "Call me Ishmael. Some years ago-never mind how long precisely-having "
-                + "little or no money in my purse, and nothing particular to interest me on shore, "
-                + "I thought I would sail about a little and see the watery part of the world. "
-                + "It is a way I have of driving off the spleen and regulating the circulation. "
-                + "Whenever I find myself growing grim about the mouth; whenever it is a damp, "
-                + "drizzly November in my soul; whenever I find myself involuntarily pausing before "
-                + "coffin warehouses, and bringing up the rear of every funeral I meet; and especially "
-                + "whenever my hypos get such an upper hand of me, that it requires a strong moral "
-                + "principle to prevent me from deliberately stepping into the street, and methodically "
-                + "knocking people's hats off-then, I account it high time to get to sea as soon as I can. "
-                + "This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself "
-                + "upon his sword; I quietly take to the ship. There is nothing surprising in this. "
-                + "If they but knew it, almost all men in their degree, some time or other, cherish "
-                + "very nearly the same feelings towards the ocean with me. There now is your insular "
-                + "city of the Manhattoes, belted round by wharves as Indian isles by coral reefs-commerce surrounds ";
-
-
-        Profile profile = service.getProfile(text).execute();
-        Profile profile2 = service.getProfile(text2).execute();
-        System.out.println("---");
-        JSONObject json = new JSONObject(profile);
-        JSONArray ar = json.getJSONObject("tree").getJSONArray("children");
-        JSONObject json2 = new JSONObject(profile2);
-        JSONArray ar2 = json2.getJSONObject("tree").getJSONArray("children");
-
-        System.out.println("profile");
-        String testing;
-        for (int i = 0; i < 5; i++) {
-            testing = ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(i).get("percentage").toString();
-            float anotherTest = Float.valueOf(testing);
-            System.out.println(ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(i).get("name"));
-            System.out.println("FLOAT PERCENTAGE " + testing);
-        }
-
-        System.out.println("---");
-
-        for (int i = 0; i < 5; i++) {
-            System.out.println(ar2.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(i).get("percentage"));
-            System.out.println(ar2.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(i).get("name"));
-            System.out.println(i);
-        }
-
-
         return new
                 ModelAndView("welcome", "message", "Welcome! Log In Here.");
-
     }
 
     @RequestMapping("welcome")
@@ -152,7 +88,7 @@ public class HomeController {
                 ModelAndView("studentRegister", "confirmMessage", confirm);
     }
 
-
+    //adding teacher after they register
     @RequestMapping("addTeacher")
     public ModelAndView addTeacher(@RequestParam("FirstName") String firstName,
                                    @RequestParam("LastName") String lastName,
@@ -181,7 +117,7 @@ public class HomeController {
                 ModelAndView("welcome", "confirmMessage", confirm);
     }
 
-
+    //adding student after registration
     @RequestMapping("addStudent")
     public ModelAndView addStudent(@RequestParam("FirstName") String firstName,
                                    @RequestParam("LastName") String lastName,
@@ -212,6 +148,7 @@ public class HomeController {
 
     @RequestMapping("valid")
     public ModelAndView testing(@RequestParam("UserName") String userName, @RequestParam("Password") String password) {
+        // after login page, it reaches this method to see if the log in user is a teacher or a student
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
         Session selectStudents = sessionFact.openSession();
@@ -221,28 +158,44 @@ public class HomeController {
         StudentEntity loginStudent = (StudentEntity) selectStudents.get(StudentEntity.class, userName);
         TeacherEntity loginTeacher = (TeacherEntity) selectTeachers.get(TeacherEntity.class, userName);
         Criteria cc = selectStudents.createCriteria(StudentClassesEntity.class).add(Restrictions.eq("studentId", userName));
+
+        //below statements check if the login user is a teacher or a student
         if (loginStudent == null && loginTeacher != null) {
-            Criteria c = selectStudents.createCriteria(StudentEntity.class);
+            // if teacher, login and view teacher's page
 
-            ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) c.list();
-            ModelAndView model = new ModelAndView("teacherPage", "message", loginTeacher.getFirstName() + " TEACHER");
-            model.addObject("theList", studentList);
-            currentUser = userName;
+            if (loginTeacher.getPassword().equals(password)) {
+                Criteria c = selectStudents.createCriteria(StudentEntity.class);
+                ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) c.list();
+                ModelAndView model = new ModelAndView("teacherPage", "message", loginTeacher.getFirstName() + " TEACHER");
+                model.addObject("theList", studentList);
+                currentUser = userName;
 
 
-            return model;
+                return model;
+            }
+            else {
+                return new ModelAndView("welcome", "message1", "Invalid Info!");
+            }
         } else if (loginStudent != null && loginTeacher == null) {
-            currentStudent = userName;
-            if (loginStudent.getTestResults() == null || loginStudent.getTestResults().equals("false")) {
-                return new ModelAndView("loggedIn", "message", loginStudent.getFirstName() + " STUDENT EMPTY TEST");
-            } else {
-                //it is true
-                Criteria c = selectStudents.createCriteria(ClassesEntity.class);
-                ArrayList<ClassesEntity> classList = (ArrayList<ClassesEntity>) c.list();
-                ArrayList<StudentClassesEntity> theClasses = (ArrayList<StudentClassesEntity>) cc.list();
-                return new ModelAndView("studentPage", "message5", loginStudent.getFirstName() + " STUDENT" + "  has taken test  " + loginStudent.getAgreeableness() + "  " + loginStudent.getConscientiousness()).addObject("theList", classList).addObject("courseList", theClasses);
+            // if student, log in
+            if (loginStudent.getPassword().equals(password)) {
+                currentStudent = userName;
+                if (loginStudent.getTestResults() == null || loginStudent.getTestResults().equals("false")) {
+                    //view test page if student hasn't taken test
+                    return new ModelAndView("loggedIn", "message", loginStudent.getFirstName() + " STUDENT EMPTY TEST");
+                } else {
+                    //go to list of classes page if the student has taken test
+                    Criteria c = selectStudents.createCriteria(ClassesEntity.class);
+                    ArrayList<ClassesEntity> classList = (ArrayList<ClassesEntity>) c.list();
+                    ArrayList<StudentClassesEntity> theClasses = (ArrayList<StudentClassesEntity>) cc.list();
+                    return new ModelAndView("studentPage", "message5", loginStudent.getFirstName() + " STUDENT" + "  has taken test  " + loginStudent.getAgreeableness() + "  " + loginStudent.getConscientiousness()).addObject("theList", classList).addObject("courseList", theClasses);
+                }
+            }
+            else {
+                return new ModelAndView("welcome", "message1", "Invalid Info!");
             }
         } else {
+            // user does not exist here so reload the welcome page with new info
             return new ModelAndView("welcome", "message1", "Invalid Info!");
         }
 
@@ -251,6 +204,7 @@ public class HomeController {
 
     @RequestMapping("createClass")
     public ModelAndView classCreate() throws ClassNotFoundException, SQLException {
+        // page can either create a new class or select a class in which we can look/make groups
         String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
         String userName = "root";
         String password = "admin1212";
@@ -274,6 +228,7 @@ public class HomeController {
         st.close();
         con.close();
 
+        //the jsp page 'createClass' below will redirect to make a new class if create class button is clicked
         return new ModelAndView("createClass", "message", "testing").addObject("theList", classNames);
 
 /*
@@ -289,12 +244,14 @@ public class HomeController {
 
     @RequestMapping("classCreated")
     public ModelAndView classCreated(@RequestParam("Classname") String className, @RequestParam("schoolName") String schoolName, @RequestParam("classID") String classID) throws ClassNotFoundException, SQLException {
+        //redirects to this from createClass if new class is created, takes in paramets of class name, etc
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
         Session session = sessionFact.openSession();
         Transaction tx = session.beginTransaction();
         ClassesEntity checkClass = (ClassesEntity) session.get(ClassesEntity.class, classID);
 
+        //below makes sure that class doesn't already exist based off classID aka validation
         if (checkClass == null) {
             ClassesEntity insertClass = new ClassesEntity();
             insertClass.setClassId(classID);
@@ -306,12 +263,10 @@ public class HomeController {
             tx.commit();
             session.close();
 
-
             String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
             String userName = "root";
             String password = "admin1212";
             String query = "SELECT * FROM Classes WHERE teacherUser IN (SELECT userName  FROM Teacher INNER JOIN Classes ON Teacher.userName = Classes.teacherUser)";
-
 
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection(url, userName, password);
@@ -341,8 +296,8 @@ public class HomeController {
 
     @RequestMapping("classSelected")
     public ModelAndView editClasses(@RequestParam("selectClass") String classSelected) throws SQLException, ClassNotFoundException {
+        //fron the dropdown, redirects to the page where group making settings can be made
         currentClass = classSelected;
-
         String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
         String userName = "root";
         String password = "admin1212";
@@ -390,8 +345,9 @@ public class HomeController {
         return new ModelAndView("createGroup", "theList", classNames).addObject("studentList", studentList);
     }
 
-    @RequestMapping("testTaken") //method for deleting parts of the list
+    @RequestMapping("testTaken")
     public ModelAndView deleteCustomer(@RequestParam("studentAnswer") String theAnswer) {
+        //takes the answers of the personality test and uses the API to create profile results, goes to the student page once results are figured out
         PersonalityInsights service = new PersonalityInsights();
         service.setUsernameAndPassword("fd5414fb-1232-411b-9edf-40bfc878274c", "aeOAQtv30TuH");
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
@@ -451,6 +407,7 @@ public class HomeController {
 
     @RequestMapping("classJoined")
     public ModelAndView joinClass(@RequestParam("classToJoin") String classID) {
+        //for a student when they click the dropdown and join a class, adds to the junction table
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
         Session session = sessionFact.openSession();
@@ -511,8 +468,11 @@ public class HomeController {
         return new ModelAndView("createGroup", "message", "gorup group").addObject("theList", classNames);
     }
 
+
+    //GO THROUGH EVVERYTHING BELOW HERE AND MAKE SURE EVERYBODY KNOWS
     @RequestMapping("groupCreated")
     public ModelAndView createGroups(@RequestParam("groupNum") String groupNum, @RequestParam("selectCriteria") String criteria) throws ClassNotFoundException, SQLException {
+        //group created using settings from previous teacher page where they choose number of people per group
         remainingList.clear();
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
@@ -636,6 +596,7 @@ public class HomeController {
 
     @RequestMapping("manageGroup")
     public ModelAndView manageGroup(@RequestParam("selectName") String removeName, @RequestParam("selectGroup") String addGroup) throws ClassNotFoundException, SQLException {
+        //allows the teacher to add remaining students into the groups that are created
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
         SessionFactory sessionFact = cfg.buildSessionFactory();
         Session session = sessionFact.openSession();
@@ -748,6 +709,7 @@ public class HomeController {
 
     @RequestMapping("viewGroup")
     public ModelAndView seeGroups() {
+        //sees groups in studentclasses entity
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
 
         SessionFactory sessionFact = cfg.buildSessionFactory();
@@ -764,6 +726,7 @@ public class HomeController {
 
     @RequestMapping("viewStudentGroup")
     public ModelAndView seeStudentGroups(@RequestParam("groupToSee") String chosenClass) {
+        //views groups by student ID in the group
         System.out.println("TESTING " + chosenClass);
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
 

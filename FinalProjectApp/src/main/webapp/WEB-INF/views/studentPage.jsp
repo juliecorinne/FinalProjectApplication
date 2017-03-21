@@ -10,18 +10,20 @@
 <html>
 <head>
     <title>studentpage</title>
+    <script type="text/javascript" src="https://embed.modernapp.co/chat?code=0af636fdc942f80def1de3c92d2637d8"></script>
 </head>
 <body>
-${message5}
-
-<h2>Classes You Are Currently Enrolled In</h2>
-<c:forEach items="${courseList}"  var="row" varStatus="loopCounter">
-    <tr>
-            <td>${row.classId}</td>
-    </tr>
-</c:forEach>
 
 
+
+<div class="container" align="center">
+    <div class="jumbotron" style="background:url(http://edu.stemjobs.com/wp-content/uploads/2015/01/86487819.jpg);
+                                      background-position: 0% 25%;
+                                      background-size: cover;
+                                      background-repeat: no-repeat;
+                                      text-shadow: black 0.3em 0.3em 0.3em;
+                                      height: 100vh;">
+        <div style="padding-top: 100px;">
 <form action="classJoined" method="post"  class="form-signin" style="max-width: 420px;
                               padding: 30px 38px 66px;
                               margin: 0 auto;
@@ -29,30 +31,50 @@ ${message5}
                               border: 3px dotted rgba(0,0,0,0.1);
                               background-color:rgba(0, 0, 0, 0.6);
                                 ">
-    <h3 class="form-signin-heading" style="text-align:center;
+    <h2 style="color:#FFFFFF">Classes You Are Currently Enrolled In</h2>
+    <div style="color:#FFFFFF">
+    <c:forEach items="${courseList}"  var="row" varStatus="loopCounter">
+        <tr style="color:#FFFFFF">
+            <td>|${row.classId}| </td>
+        </tr>
+    </c:forEach>
+    </div>
+    <h2 style="color:#FFFFFF"
+    class="form-signin-heading" style="text-align:right;
                                                           margin-bottom: 30px;">
-        Join a Class </h3>
-    <h1><a href="viewStudentGroup">LOOK AT UR GROUPS</a></h1>
+        Join a Class </h2>
+
     <hr>
     <select class="form-control"  name="classToJoin">
-        <option disabled selected value> -- select a class-- </option>
+        <option disabled selected value> -- select a class -- </option>
         <c:forEach var="myvar" items="${theList}">
             <option value = ${myvar.classId}>${myvar.name}  ${myvar.classId}</option>
         </c:forEach>
     </select>
 
     <button type="submit" value="Submit">JOIN CLASS</button>
-
 </form>
-<form action="viewStudentGroup">
-<select class="form-control"  name="groupToSee">
-    <option disabled selected value> -- view groups by class-- </option>
-    <c:forEach var="myvar" items="${courseList}">
-        <option value = ${myvar.classId}>${myvar.classId}</option>
-    </c:forEach>
-</select>
+        </div>
+<form action="viewStudentGroup" style="max-width: 420px;
+                              padding: 30px 38px 66px;
+                              margin: 0 auto;
+                              background-color: #eee;
+                              border: 3px dotted rgba(0,0,0,0.1);
+                              background-color:rgba(0, 0, 0, 0.6);
+                                ">
+
+        <h2 style="color:#FFFFFF">View Groups</h2>
+        <hr>
+    <select class="form-control"  name="groupToSee">
+        <option disabled selected value> -- view groups by class -- </option>
+        <c:forEach var="myvar" items="${courseList}">
+            <option value = ${myvar.classId}>${myvar.classId}</option>
+        </c:forEach>
+    </select>
     <button type="submit" value="Submit">VIEW GROUPS</button>
 </form>
+    </div>
+</div>
 
 </body>
 </html>

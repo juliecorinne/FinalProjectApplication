@@ -20,18 +20,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-${message}
+
+<div class="container" align="center">
+    <div class="jumbotron" style="background:url(http://edu.stemjobs.com/wp-content/uploads/2015/01/86487819.jpg);
+                                      background-position: 0% 25%;
+                                      background-size: cover;
+                                      background-repeat: no-repeat;
+                                      text-shadow: black 0.3em 0.3em 0.3em;
+                                      ;">
+
+        <form style="max-width: 100%;
+                              padding: 30px 38px 66px;
+                              margin: 0 auto;
+                              background-color: #eee;
+                              border: 3px dotted rgba(0,0,0,0.1);
+                              background-color:rgba(0, 0, 0, 0.6);
+                              overflow: auto;">
+            <div style="color:#FFFFFF">${message}</div>
 
 <br>
 
-    <h3 class="form-signin-heading" style="text-align:center;
+    <div style="color:#FFFFFF"><h3 class="form-signin-heading" style="text-align:center;
                                                           margin-bottom: 30px;">
-        View Students In Group</h3>
+    View Student Groups</h3></div>
     <hr>
 
     <table border=1>
         <c:forEach items="${theGroup}" begin="0" var="row" varStatus="loopCounter">
-            <tr>
+            <tr style="color:#FFFFFF">
                 <td><c:out value="Group ${loopCounter.count}: "></c:out></td>
 
                 <c:forEach items="${row}" var="cell">
@@ -49,35 +65,37 @@ ${message}
 
 
 
-REMAINING STUDENT
+<div style="color:#FFFFFF">REMAINING STUDENT</div>
 <table border=1>
     <c:forEach var="myvar" items="${leftover}">  <%----creating a loop that displays list--%>
-        <tr>
+        <tr style="color:#FFFFFF">
             <td> ${myvar.firstName}  ${myvar.lastName} </td>
 
         </tr>
     </c:forEach>
 </table>
+        </form>
 
-<form action="manageGroup" method="post"  class="form-signin" style="max-width: 420px;
+<form action="manageGroup" method="post"  class="form-signin" style="max-width: 100%;
                               padding: 30px 38px 66px;
                               margin: 0 auto;
                               background-color: #eee;
                               border: 3px dotted rgba(0,0,0,0.1);
                               background-color:rgba(0, 0, 0, 0.6);
                                 ">
-   ADD STUDENT:
+    <p style="color:#FFFFFF">Add Student: </p>
+    <hr>
 
     <select name="selectName">
-        <option disabled selected value> -- select a remaining student-- </option>
+        <option disabled selected value> -- select a remaining student -- </option>
         <c:forEach var="myvar" items="${leftover}" varStatus="loopCounter">
             <option value = ${loopCounter.count-1}>${myvar.firstName}  ${myvar.lastName}</option>
         </c:forEach>
     </select>
 
-    TO GROUP:
+    <p style="color:#FFFFFF">To Group:</p>
     <select name="selectGroup">
-        <option disabled selected value> -- select a group-- </option>
+        <option disabled selected value> -- select a group -- </option>
         <c:forEach var="myvar" items="${groups}" varStatus="loopCounter">
             <option value = ${loopCounter.count-1}>Group ${loopCounter.count}</option>
         </c:forEach>
@@ -87,5 +105,7 @@ REMAINING STUDENT
 
 
 </form>
+    </div>
+</div>
 </body>
 </html>
