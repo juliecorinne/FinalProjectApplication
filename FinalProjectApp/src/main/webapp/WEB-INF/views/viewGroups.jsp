@@ -65,7 +65,7 @@
 
 
 
-<div style="color:#FFFFFF">REMAINING STUDENT</div>
+<div style="color:#FFFFFF">REMAINING STUDENTS</div>
 <table border=1>
     <c:forEach var="myvar" items="${leftover}">  <%----creating a loop that displays list--%>
         <tr style="color:#FFFFFF">
