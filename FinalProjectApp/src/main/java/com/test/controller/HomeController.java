@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -103,7 +104,7 @@ public class HomeController {
         Transaction tx = session.beginTransaction();
         //adding restrictions uses current username for teacher
         Criteria c = session.createCriteria(TeacherEntity.class).add(Restrictions.eq("userName", userName));
-        ArrayList<TeacherEntity> tList = (ArrayList<TeacherEntity>)c.list();
+        ArrayList<TeacherEntity> tList = (ArrayList<TeacherEntity>) c.list();
 
         //validation to check if username already exists
         if (tList.size() == 0) {
@@ -122,8 +123,7 @@ public class HomeController {
 
             return new
                     ModelAndView("welcome", "confirmMessage", confirm);
-        }
-        else {
+        } else {
             //return same page with error message
             return new ModelAndView("teacherRegister", "message1", "User already exists!");
         }
@@ -143,7 +143,7 @@ public class HomeController {
         Session session = sessionFact.openSession();
         Transaction tx = session.beginTransaction();
         Criteria c = session.createCriteria(StudentEntity.class).add(Restrictions.eq("userName", userName));
-        ArrayList<StudentEntity> cList = (ArrayList<StudentEntity>)c.list();
+        ArrayList<StudentEntity> cList = (ArrayList<StudentEntity>) c.list();
 
         //checks to see if student username already exists
         if (cList.size() == 0) {
@@ -162,9 +162,8 @@ public class HomeController {
 
             return new
                     ModelAndView("welcome", "message1", confirm);
-        }
-        else{
-             return new ModelAndView("studentRegister", "message", "User already exists!");
+        } else {
+            return new ModelAndView("studentRegister", "message", "User already exists!");
         }
     }
 
@@ -195,8 +194,7 @@ public class HomeController {
 
 
                 return model;
-            }
-            else {
+            } else {
                 return new ModelAndView("welcome", "message", "Invalid Info!");
             }
         } else if (loginStudent != null && loginTeacher == null) {
@@ -215,8 +213,7 @@ public class HomeController {
                     ArrayList<StudentClassesEntity> theClasses = (ArrayList<StudentClassesEntity>) cc.list();
                     return new ModelAndView("studentPage", "message5", loginStudent.getFirstName() + " STUDENT" + "  has taken test  " + loginStudent.getAgreeableness() + "  " + loginStudent.getConscientiousness()).addObject("theList", classList).addObject("courseList", theClasses);
                 }
-            }
-            else {
+            } else {
                 return new ModelAndView("welcome", "message1", "Invalid Info!");
             }
         } else {
@@ -245,12 +242,7 @@ public class HomeController {
 
         //System.out.println(classNames.size());
 
-        while (rs.next()) {
-            ClassesEntity temp = new ClassesEntity();
-            temp.setName(rs.getString("name"));
-            temp.setClassId(rs.getString("classID"));
-            classNames.add(temp);
-        }
+        classNames(rs, classNames);
         rs.close();
         st.close();
         con.close();
@@ -267,6 +259,15 @@ public class HomeController {
         selectTeachers.close();
         return model;
         */
+    }
+
+    public void classNames(ResultSet rs, ArrayList<ClassesEntity> classNames) throws SQLException {
+        while (rs.next()) {
+            ClassesEntity temp = new ClassesEntity();
+            temp.setName(rs.getString("name"));
+            temp.setClassId(rs.getString("classID"));
+            classNames.add(temp);
+        }
     }
 
     //takes in parameters for the class information
@@ -304,12 +305,7 @@ public class HomeController {
 
             //System.out.println(classNames.size());
 
-            while (rs.next()) {
-                ClassesEntity temp = new ClassesEntity();
-                temp.setName(rs.getString("name"));
-                temp.setClassId(rs.getString("classID"));
-                classNames.add(temp);
-            }
+            classNames(rs, classNames);
             rs.close();
             st.close();
             con.close();
@@ -339,12 +335,7 @@ public class HomeController {
 
         //System.out.println(classNames.size());
 
-        while (rs.next()) {
-            ClassesEntity temp = new ClassesEntity();
-            temp.setName(rs.getString("name"));
-            temp.setClassId(rs.getString("classID"));
-            classNames.add(temp);
-        }
+        classNames(rs, classNames);
 
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
 
@@ -354,7 +345,7 @@ public class HomeController {
 
         selectStudents.beginTransaction();
         //displays all of the students from the student_classes junction table where the studentID is associated w classID
-        query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '"+classSelected+"')";
+        query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '" + classSelected + "')";
         Criteria c = selectStudents.createCriteria(StudentEntity.class);
         Criteria cc = selectStudents.createCriteria(StudentClassesEntity.class);
         cc.add(Restrictions.like("classId", classSelected));
@@ -381,8 +372,7 @@ public class HomeController {
         if (theAnswer.length() < 100) {
             return new ModelAndView("loggedIn", "message", "Please enter at least 20 words per answer!");
 
-        }
-        else {
+        } else {
             //takes the answers of the personality test and uses the API to create profile results, goes to the student page once results are figured out
             PersonalityInsights service = new PersonalityInsights();
             service.setUsernameAndPassword("fd5414fb-1232-411b-9edf-40bfc878274c", "aeOAQtv30TuH");
@@ -450,8 +440,7 @@ public class HomeController {
             if (theClasses.size() == 0) {
                 return new ModelAndView("studentPage", "message2", text).addObject("theList", classList).addObject("courseList", emptyList);
 
-            }
-            else {
+            } else {
 
                 return new ModelAndView("studentPage", "message2", text).addObject("theList", classList).addObject("courseList", theClasses);
             }
@@ -475,7 +464,7 @@ public class HomeController {
         temp.setStudentId(currentStudent);
         session.save(temp);
 
-         Criteria c = session.createCriteria(ClassesEntity.class);
+        Criteria c = session.createCriteria(ClassesEntity.class);
         ArrayList<ClassesEntity> classList = (ArrayList<ClassesEntity>) c.list();
 
         /*
@@ -483,9 +472,9 @@ public class HomeController {
          ArrayList<StudentClassesEntity> anotherList = (ArrayList<StudentClassesEntity>) cc.list();
 */
 
-            Criteria cc = session.createCriteria(StudentClassesEntity.class);
-            cc.add(Restrictions.eq("studentId", currentStudent));
-          ArrayList<StudentClassesEntity> anotherList = (ArrayList<StudentClassesEntity>) cc.list();
+        Criteria cc = session.createCriteria(StudentClassesEntity.class);
+        cc.add(Restrictions.eq("studentId", currentStudent));
+        ArrayList<StudentClassesEntity> anotherList = (ArrayList<StudentClassesEntity>) cc.list();
 
 //        ArrayList<String> anotherList= (ArrayList<String>)q.list();
 
@@ -511,12 +500,7 @@ public class HomeController {
 
         //System.out.println(classNames.size());
 
-        while (rs.next()) {
-            ClassesEntity temp = new ClassesEntity();
-            temp.setName(rs.getString("name"));
-            temp.setClassId(rs.getString("classID"));
-            classNames.add(temp);
-        }
+        classNames(rs, classNames);
         rs.close();
         st.close();
         con.close();
@@ -524,7 +508,6 @@ public class HomeController {
     }
 
 
-    //GO THROUGH EVVERYTHING BELOW HERE AND MAKE SURE EVERYBODY KNOWS
     @RequestMapping("groupCreated")
     public ModelAndView createGroups(@RequestParam("groupNum") String groupNum, @RequestParam("selectCriteria") String criteria) throws ClassNotFoundException, SQLException {
         //validation to ensure teacher us entering a number and not leaving this part blank
@@ -573,7 +556,7 @@ public class HomeController {
             //counter counts all the students again, temp student is created from query and added to studentList which is list of ascending
             while (rs.next()) {
                 //constructor for temp StudentEntity
-                //push temp student into studnetlist
+                //push temp student into studentList
                 StudentEntity temp = new StudentEntity(rs.getString("firstName"), rs.getString("lastName"), rs.getString("userName"), rs.getString("password"),
                         rs.getString("email"), rs.getString("testResults"), rs.getString("className"), rs.getDouble("oppenness"),
                         rs.getDouble("emotionalRange"), rs.getDouble("agreeableness"), rs.getDouble("introExtro"), rs.getDouble("conscientiousness"));
@@ -643,88 +626,87 @@ public class HomeController {
             st.close();
             con.close();
             return new ModelAndView("viewGroups", "leftover", remainingList).addObject("theGroup", groupList).addObject("groups", groupNames);
-        }
-        else {
+        } else {
             return editClasses(currentClass).addObject("errorMessage", "Please enter group size!");
         }
+    }
+
+    @RequestMapping("manageGroup")
+    public ModelAndView manageGroup(@RequestParam("selectName") String removeName, @RequestParam("selectGroup") String addGroup) throws ClassNotFoundException, SQLException {
+        //allows the teacher to add remaining students into the groups that are created
+        Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
+        SessionFactory sessionFact = cfg.buildSessionFactory();
+        Session session = sessionFact.openSession();
+        Transaction tx = session.beginTransaction();
+
+        String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
+        String userName = "root";
+        String password = "admin1212";
+        //String query = "SELECT * FROM Classes WHERE teacherUser IN (SELECT userName  FROM Teacher INNER JOIN Classes ON Teacher.userName = Classes.teacherUser)";
+
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection(url, userName, password);
+        Statement st = con.createStatement();
+        //ResultSet rs = st.executeQuery(query);
+        String query = "";
+        query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '" + currentClass + "')";
+        ResultSet rs = st.executeQuery(query);
+        int counter = 0;
+        while (rs.next()) {
+            counter += 1;
         }
 
-        @RequestMapping("manageGroup")
-        public ModelAndView manageGroup(@RequestParam("selectName") String removeName, @RequestParam("selectGroup") String addGroup) throws ClassNotFoundException, SQLException {
-            //allows the teacher to add remaining students into the groups that are created
-            Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
-            SessionFactory sessionFact = cfg.buildSessionFactory();
-            Session session = sessionFact.openSession();
-            Transaction tx = session.beginTransaction();
+        //set query where you count number of students in student_classes rather than just the student entity
+        //int numStudents = ((Long)session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).setProjection(Projections.rowCount()).uniqueResult()).intValue();
+        int numStudents = counter;
+        int groupNumber = THEGROUPNUM;
+        int numGroups = numStudents / groupNumber;
+        int remainingStudents = numStudents % groupNumber;
 
-            String url = "jdbc:mysql://finalprojectapp.cl4dqbesxxdh.us-east-2.rds.amazonaws.com/finalprojectapp";
-            String userName = "root";
-            String password = "admin1212";
-            //String query = "SELECT * FROM Classes WHERE teacherUser IN (SELECT userName  FROM Teacher INNER JOIN Classes ON Teacher.userName = Classes.teacherUser)";
 
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection(url, userName, password);
-            Statement st = con.createStatement();
-            //ResultSet rs = st.executeQuery(query);
-            String query = "";
-            query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '"+currentClass+"')";
-            ResultSet rs = st.executeQuery(query);
-            int counter = 0;
-            while (rs.next()) {
-                counter += 1;
+        // Criteria c = session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).addOrder(Order.asc(criteria));
+
+        query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '" + currentClass + "') ORDER BY '" + THECRITERIA + "' asc";
+
+        //query = "SELECT * FROM Student";
+
+        //Query q = session.createSQLQuery(query);
+
+        rs = st.executeQuery(query);
+
+        int counter2 = 0;
+        ArrayList<StudentEntity> studentList = new ArrayList<StudentEntity>();
+        while (rs.next()) {
+            //constructor for temp StudentEntity
+            //push studentEntity into studentList
+            StudentEntity temp = new StudentEntity(rs.getString("firstName"), rs.getString("lastName"), rs.getString("userName"), rs.getString("password"),
+                    rs.getString("email"), rs.getString("testResults"), rs.getString("className"), rs.getDouble("oppenness"),
+                    rs.getDouble("emotionalRange"), rs.getDouble("agreeableness"), rs.getDouble("introExtro"), rs.getDouble("conscientiousness"));
+            studentList.add(temp);
+            counter2++;
+        }
+
+        //ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) q.list();
+
+        StudentEntity[][] groupList = new StudentEntity[numGroups][groupNumber];
+        int studentCounter = 0;
+        //turning addGroup into an integer, used in line 744
+        int addToGroup = Integer.parseInt(addGroup);
+        //turns removeName into an int, used in line 744,752
+        int index = Integer.parseInt(removeName);
+        //nested for loop, does the same thing as the mapping from above
+        for (int i = 0; i < numGroups; i++) {
+            for (int j = 0; j < groupNumber; j++) {
+                //System.out.println("IN BOX " + i + "_" + j + " " + studentList.get(studentCounter).getFirstName());
+                groupList[i][j] = studentList.get(studentCounter);
+                studentCounter++;
             }
-
-            // gotat set query where you count number of studnets in student_classes rather than just the student entity
-            //int numStudents = ((Long)session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).setProjection(Projections.rowCount()).uniqueResult()).intValue();
-            int numStudents = counter;
-            int groupNumber = THEGROUPNUM;
-            int numGroups = numStudents / groupNumber;
-            int remainingStudents = numStudents % groupNumber;
+        }
+        //groupList[addToGroup][groupNumber-1] = remainingList.get(index);
 
 
-            // Criteria c = session.createCriteria(StudentEntity.class).add(Restrictions.eq("className", currentClass)).addOrder(Order.asc(criteria));
-
-            query = "SELECT * FROM `Student` WHERE `userName` IN (SELECT `studentID` FROM `Student_Classes` WHERE `classID` = '"+currentClass+"') ORDER BY '"+THECRITERIA+"' asc";
-
-            //query = "SELECT * FROM Student";
-
-            //Query q = session.createSQLQuery(query);
-
-            rs = st.executeQuery(query);
-
-            int counter2 = 0;
-            ArrayList<StudentEntity> studentList = new ArrayList<StudentEntity>();
-            while (rs.next()) {
-                //constructor for temp StudentEntity
-                //push studneteklfjaf into studnetlist
-                StudentEntity temp = new StudentEntity(rs.getString("firstName"), rs.getString("lastName"), rs.getString("userName"), rs.getString("password"),
-                        rs.getString("email"), rs.getString("testResults"), rs.getString("className"), rs.getDouble("oppenness"),
-                        rs.getDouble("emotionalRange"), rs.getDouble("agreeableness"), rs.getDouble("introExtro"), rs.getDouble("conscientiousness"));
-                studentList.add(temp);
-                counter2++;
-            }
-
-            //ArrayList<StudentEntity> studentList = (ArrayList<StudentEntity>) q.list();
-
-            StudentEntity[][] groupList = new StudentEntity[numGroups][groupNumber];
-            int studentCounter = 0;
-            //turning addGroup into an integer, used in line 744
-            int addToGroup = Integer.parseInt(addGroup);
-            //turns removeName into an int, used in line 744,752
-            int index = Integer.parseInt(removeName);
-            //nested for loop, does the same thing as the mapping from above
-            for (int i = 0; i < numGroups; i++) {
-                for (int j = 0; j < groupNumber; j++) {
-                    //System.out.println("IN BOX " + i + "_" + j + " " + studentList.get(studentCounter).getFirstName());
-                    groupList[i][j] = studentList.get(studentCounter);
-                    studentCounter++;
-                }
-            }
-            //groupList[addToGroup][groupNumber-1] = remainingList.get(index);
-
-
-            //System.out.println("ORDERED GROUP SHOULD PRINT HERE");
-            //don't need this again beacuse it is a repeat and students in groups are already saved in the database
+        //System.out.println("ORDERED GROUP SHOULD PRINT HERE");
+        //don't need this again beacuse it is a repeat and students in groups are already saved in the database
       /*      for (int i = 0; i < groupNumber; i++) {
                 for (int j = 0; j < numGroups; j++) {
                     String idStudent = groupList[j][i].getUserName();
@@ -741,45 +723,45 @@ public class HomeController {
             }
             */
 
-            //remainglist is a global value that is saved until create groups is accessed, this way when someone goes
-            //manage a group the program knows who was left over
+        //remaingList is a global value that is saved until create groups is accessed, this way when someone goes
+        //manage a group the program knows who was left over
 
-            //deleting person from remainingList based off index based off selection in dropdown list value
-            String query2 = "DELETE FROM `Student_Classes` WHERE `studentID` = '"+remainingList.get(index).getUserName()+"' AND `classID` = '"+currentClass+"'";
-            st.executeUpdate(query2);
-            String groupIndexed = currentClass + "_" + addToGroup;
-            //Inserts row of same values of delted student/class/group
-            query2 = "INSERT INTO `Student_Classes` (studentID, classID, groupID) VALUES ('"+remainingList.get(index).getUserName()+"', '"+currentClass+"', '"+groupIndexed+"')";
-            st.executeUpdate(query2);
-            //System.out.println("GROU INDEX   " + addToGroup);
-            String output = "Your Student " + remainingList.get(index).getFirstName() + " " +  remainingList.get(index).getLastName() + " has been added to Group " + (addToGroup + 1);
-            //removes from remainingList
-            remainingList.remove(index);
+        //deleting person from remainingList based off index based off selection in dropdown list value
+        String query2 = "DELETE FROM `Student_Classes` WHERE `studentID` = '" + remainingList.get(index).getUserName() + "' AND `classID` = '" + currentClass + "'";
+        st.executeUpdate(query2);
+        String groupIndexed = currentClass + "_" + addToGroup;
+        //Inserts row of same values of delted student/class/group
+        query2 = "INSERT INTO `Student_Classes` (studentID, classID, groupID) VALUES ('" + remainingList.get(index).getUserName() + "', '" + currentClass + "', '" + groupIndexed + "')";
+        st.executeUpdate(query2);
+        //System.out.println("GROU INDEX   " + addToGroup);
+        String output = "Your Student " + remainingList.get(index).getFirstName() + " " + remainingList.get(index).getLastName() + " has been added to Group " + (addToGroup + 1);
+        //removes from remainingList
+        remainingList.remove(index);
 
-            //needed a blank string so that the program didnt grab the students still within the class,
-            //but not in a group
+        //needed a blank string so that the program didn't grab the students still within the class,
+        //but not in a group
 
-            String nullString = "";
-            //grabs all group names in currentClass
-            query = "SELECT DISTINCT groupID FROM `Student_Classes` WHERE `classID` = '"+currentClass+"' AND `groupID` != '"+nullString+"'";
-            rs = st.executeQuery(query);
-            ArrayList<String> groupNames = new ArrayList<String>();
-            int theCounter = numGroups;
-            while (rs.next()) {
-                if (theCounter == 0) break;
-                groupNames.add(rs.getString("groupID"));
-                theCounter--;
-            }
+        String nullString = "";
+        //grabs all group names in currentClass
+        query = "SELECT DISTINCT groupID FROM `Student_Classes` WHERE `classID` = '" + currentClass + "' AND `groupID` != '" + nullString + "'";
+        rs = st.executeQuery(query);
+        ArrayList<String> groupNames = new ArrayList<String>();
+        int theCounter = numGroups;
+        while (rs.next()) {
+            if (theCounter == 0) break;
+            groupNames.add(rs.getString("groupID"));
+            theCounter--;
+        }
 
 
-            st.close();
-            con.close();
-            return new ModelAndView("viewGroups", "message", output).addObject("leftover", remainingList).addObject("theGroup", groupList).addObject("groups", groupNames);
+        st.close();
+        con.close();
+        return new ModelAndView("viewGroups", "message", output).addObject("leftover", remainingList).addObject("theGroup", groupList).addObject("groups", groupNames);
     }
 
     @RequestMapping("viewGroup")
     public ModelAndView seeGroups() {
-        //sees groups in studentclasses entity
+        //sees groups in student_classes entity
         Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
 
         SessionFactory sessionFact = cfg.buildSessionFactory();
