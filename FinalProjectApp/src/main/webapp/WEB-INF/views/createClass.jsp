@@ -37,8 +37,6 @@
         <li role="presentation"><a href="viewGroup" aria-controls="messages" role="tab" data-toggle="tab">View Groups</a></li>
     </ul>
     <ul class="nav navbar-right navbar-nav">
-        <li role="presentation"><form action="/teacherPage.jsp" method="post">Back  <input type="hidden" name="UserName" value="filler"/></form>
-        </li>
         <li role="presentation"><a href="/" aria-controls="messages" role="tab" data-toggle="tab">Log Out</a></li>
     </ul>
 </div>

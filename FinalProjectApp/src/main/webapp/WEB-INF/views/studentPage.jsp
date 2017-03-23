@@ -11,6 +11,7 @@
 <head>
     <title>studentpage</title>
     <script type="text/javascript" src="https://embed.modernapp.co/chat?code=0af636fdc942f80def1de3c92d2637d8"></script>
+
 </head>
 <body>
 
@@ -31,6 +32,7 @@
                               border: 3px dotted rgba(0,0,0,0.1);
                               background-color:rgba(0, 0, 0, 0.6);
                                 ">
+    <button><a href="/" aria-controls="messages" role="tab" >LOG OUT</a></button>
     <h2 style="color:#FFFFFF">Classes You Are Currently Enrolled In</h2>
     <div style="color:#FFFFFF">
     <c:forEach items="${courseList}"  var="row" varStatus="loopCounter">
@@ -73,6 +75,7 @@
     </select>
     <button type="submit" value="Submit">VIEW GROUPS</button>
 </form>
+
     </div>
 </div>
 
