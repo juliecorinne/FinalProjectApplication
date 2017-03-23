@@ -415,6 +415,7 @@ public class HomeController {
             testing = ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(0).get("percentage").toString();
             double anotherTest = Double.valueOf(testing);
             //System.out.println(ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(0).get("name"));
+            //sets the value for the student with the current username
             theStudent.setOppenness(anotherTest);
 
             testing = ar.getJSONObject(0).getJSONArray("children").getJSONObject(0).getJSONArray("children").getJSONObject(1).get("percentage").toString();
@@ -707,8 +708,11 @@ public class HomeController {
 
             StudentEntity[][] groupList = new StudentEntity[numGroups][groupNumber];
             int studentCounter = 0;
+            //turning addGroup into an integer, used in line 744
             int addToGroup = Integer.parseInt(addGroup);
+            //turns removeName into an int, used in line 744,752
             int index = Integer.parseInt(removeName);
+            //nested for loop, does the same thing as the mapping from above
             for (int i = 0; i < numGroups; i++) {
                 for (int j = 0; j < groupNumber; j++) {
                     //System.out.println("IN BOX " + i + "_" + j + " " + studentList.get(studentCounter).getFirstName());
@@ -737,6 +741,9 @@ public class HomeController {
             }
             */
 
+            //remainglist is a global value that is saved until create groups is accessed, this way when someone goes
+            //manage a group the program knows who was left over
+
             //deleting person from remainingList based off index based off selection in dropdown list value
             String query2 = "DELETE FROM `Student_Classes` WHERE `studentID` = '"+remainingList.get(index).getUserName()+"' AND `classID` = '"+currentClass+"'";
             st.executeUpdate(query2);
@@ -748,6 +755,9 @@ public class HomeController {
             String output = "Your Student " + remainingList.get(index).getFirstName() + " " +  remainingList.get(index).getLastName() + " has been added to Group " + (addToGroup + 1);
             //removes from remainingList
             remainingList.remove(index);
+
+            //needed a blank string so that the program didnt grab the students still within the class,
+            //but not in a group
 
             String nullString = "";
             //grabs all group names in currentClass
